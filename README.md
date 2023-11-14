@@ -20,11 +20,11 @@ The Node class represents a state of the puzzle. It includes the puzzle configur
 The Point class represents a position on the puzzle board. It includes methods for retrieving and updating coordinates.
 
 ### Project Stages
-Stage A
+1) Stage A
 Graph Implementation: A custom graph is implemented to represent the puzzle boards. Each possible board configuration is a vertex, and two boards that can be reached by one move are connected as neighbors in the graph.
-Stage B
+2) Stage B
 Board Initialization: The project allows two ways to initialize the starting board: manual input or randomly creating a board by making a legal and random number of moves from the solution board.
-Stage C
+3) Stage C
 BFS Algorithm: The Breadth-First Search algorithm is implemented and used to solve both "Puzzle 15" and "Puzzle 24."
 Stage D
 A Algorithm*: The A* algorithm is implemented and used to solve both puzzles with three different heuristic functions
