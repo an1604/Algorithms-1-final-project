@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Graph {
     private Map<Integer , Map<Node , Set<Node>>> connections ;
+
     private  int size;
 
     private  int id;
@@ -15,10 +16,14 @@ public class Graph {
     public  int get_increase_Id() {
         return this.id ++;
     }
+
     public Graph(int size) {
         this.connections = new HashMap<>();
         this.size = size;
         this.id =1 ;
+    }
+    public int getSize() {
+        return size;
     }
 
     public Map<Integer , Map<Node , Set<Node>>> getConnections() {
@@ -34,6 +39,9 @@ public class Graph {
         Node node = new Node(size ,id ++);
         nodeMap.put(node,new HashSet<>());
         connections.put(node.getID() ,nodeMap);
+        int row = node.getEmpty_point().getX();
+        int col = node.getEmpty_point().getY();
+        generate_neighbors(row,col,node);
         System.out.println("Node added successfully , node id is : " + node.getID());
     }
 
@@ -251,6 +259,11 @@ public class Graph {
         }
     }
 
+    public Node get_random_node_for_bfs(){
+        Random r = new Random();
+        int index = Math.abs(r.nextInt() % id);
+        return connections.get(index).keySet().iterator().next();
+    }
     //This function will be called from the main and generate the graph from scratch
     public static Graph menu() {
         boolean stop = false;
@@ -284,7 +297,6 @@ public class Graph {
                 case "5":
                     graph = null;
                     graph = generate_random_graph(size);
-                    graph.print_graph();
                     break;
                 case "6":
                     System.out.println("Exiting...");

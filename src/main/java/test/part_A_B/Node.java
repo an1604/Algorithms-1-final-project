@@ -87,13 +87,23 @@ public class Node {
             for (int j = 0; j < this.size; j++) {
                 System.out.println("The next number  for place  (" + i + "," + j +"): ");
                 output = scanner.nextLine();
-                if (output.equals("NULL") || output.equals("null") || output.equals("Null")){
+                if (output.equals("NULL") || output.equals("null") || output.equals("Null") || output.equals("-1")){
                     num = -1 ;
                     this.empty_point = new Point(i,j);
+                    System.out.println("Getting the null point!");
                 }
-                else
-                    num = Integer.parseInt(output);
-               if (numSet.add( num)){
+                else {
+                    try {
+                        num = Integer.parseInt(output);
+                    }
+                    catch (NumberFormatException e){
+                        e.printStackTrace();
+                        System.out.println("try again...");
+                        j-=1;
+                        continue;
+                    }
+                }
+                    if (numSet.add( num)){
                    this.puzzle[i][j]= num;
                    System.out.println("The number " +  output + " added successfully!");
                }
