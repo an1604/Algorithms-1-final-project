@@ -6,18 +6,59 @@ import java.util.Set;
 
 public class Node {
     private int size;
+
+    private int [][] puzzle;
+
+    private boolean visited;
+
+    private int ID;
+    private Point empty_point;
+
+    private String state;
+
     // copy constructor
-    public Node(Node node ) {
+    public Node(Node node, int increaseId , Point p) {
      this.size = node.size;
      this.puzzle = node.getPuzzle();
-     this.ID = node.getID() +1;
+     this.ID = increaseId;
+     this.visited = false;
+     this.empty_point = p;
+    }
+
+    // regular Ctor
+    public Node(int size , int id) {
+        this.visited = false;
+        this.size = size;
+        this.ID =id;
+        this.puzzle = new int[size][size];
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Generate node for you?");
+        String s = scanner.nextLine();
+        if (s.equals("no"))
+            initialPuzzle();
+    }
+    public String getState() {
+        return state;
+    }
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
 
     public void setID(int ID) {
         this.ID = ID;
     }
-
-    private int ID;
 
     public int[][] getPuzzle() {
         return puzzle;
@@ -27,29 +68,8 @@ public class Node {
         this.puzzle = puzzle;
     }
 
-    private int [][] puzzle;
-
     public void setEmpty_point(Point empty_point) {
         this.empty_point = empty_point;
-    }
-
-    private Point empty_point;
-
-    public Node(int s  , int[][] puzzle, int id) {
-        this.size = s;
-        this.puzzle = puzzle;
-        this.ID =id;
-    }
-
-    public Node(int size , int id) {
-        this.size = size;
-        this.ID =id;
-        this.puzzle = new int[size][size];
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Generate node for you?");
-        String s = scanner.nextLine();
-        if (s.equals("no"))
-            initialPuzzle();
     }
 
     public Point getEmpty_point() {
@@ -88,13 +108,17 @@ public class Node {
     }
 
     public void print_puzzle() {
+        StringBuilder sb = new StringBuilder();
         for (int[] nums : this.puzzle) {
             for (int num : nums) {
-                System.out.print(num == -1 ? "null" : String.valueOf(num) + " ");
+                sb.append(num == -1 ? "null" : String.format("%2d", num) + " ");
             }
-            System.out.println();
+            sb.append("\n");
         }
+        this.state = sb.toString();
+        System.out.println(sb.toString());
     }
+
 
 
     public int getID() {

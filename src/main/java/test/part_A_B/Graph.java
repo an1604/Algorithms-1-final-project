@@ -15,9 +15,6 @@ public class Graph {
     public  int get_increase_Id() {
         return this.id ++;
     }
-    public  int get_decrease_Id() {
-        return this.id --;
-    }
     public Graph(int size) {
         this.connections = new HashMap<>();
         this.size = size;
@@ -51,27 +48,32 @@ public class Graph {
     public void removeNode(int id){
         connections.remove(id);
     }
-    public boolean addEdge(int id1 , int id2){
+    public void addEdge(int id1, int id2) {
         // Get the Node (Key) from the insider map
         Node node1 = getNodeByID(id1).keySet().iterator().next();
         Node node2 = getNodeByID(id2).keySet().iterator().next();
-        // Checking if the connection is legal before creating the edge
-        boolean res = check_connection(node1,node2);
+
+        // Checking if the connection is legal and the nodes are different before creating the edge
+        boolean res = check_connection(node1, node2) && (id1 != id2);
         if (res) {
-            connections.get(id1).get(node1).add(node2);
-            connections.get(id2).get(node2).add(node1);
+            try {
+                // add the exact node and all of his neighbors
+                connections.get(id1).get(node1).add(node2);
+                connections.get(id1).get(node1).addAll(getNeighbors(node2.getID()));
+
+                connections.get(id2).get(node2).add(node1);
+                connections.get(id2).get(node2).addAll(getNeighbors(node1.getID()));
+            } catch (NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
             System.out.println("Done!");
-            return res;
+            return;
         }
-        System.out.println("Cannot make the edge because this step is nol legal!");
-        return true;
+        System.out.println("Cannot make the edge because this step is not legal!");
     }
 
+
     private boolean check_connection(Node node1, Node node2) {
-        // Checking for change
-        if (Arrays.deepEquals(node1.getPuzzle(), node2.getPuzzle())) {
-            return false;
-        }
 
         // Counter of how many positions are different from node 1 to node 2
         int differences = 0;
@@ -143,44 +145,77 @@ public class Graph {
             // Setting the puzzle to the first node
             node.setPuzzle(puzzle);
             g.add_generated_Node(node);
-            // Duplicate the node 3 times and make a little change to set edge (moving the null)
-            // Duplicate the node 3 times and make a little change to set edge (moving the null)
-            for (int i = 0; i < 4; i++) {
-                Node duplicatedNode = new Node(node);
-                // Copy the original puzzle to the duplicated node
-                int[][] duplicatedPuzzle = new int[size][size];
-                for (int row = 0; row < size; row++) {
-                    System.arraycopy(node.getPuzzle()[row], 0, duplicatedPuzzle[row], 0, size);
-                }
+
                 // Switch the empty index with a neighboring index
                 int row = emp_index.getX();
                 int col = emp_index.getY();
-                int[] neighbors = {-1, 0, 1};
-                int newRow, newCol;
-                do {
-                    newRow = row + neighbors[random.nextInt(neighbors.length)];
-                    newCol = col + neighbors[random.nextInt(neighbors.length)];
-                } while (newRow < 0 || newRow >= size || newCol < 0 || newCol >= size || duplicatedPuzzle[newRow][newCol] == -1);
+                //Generate all neighbors
+                g.generate_neighbors(row,col, node);
 
-                // Swap the values
-                int temp = duplicatedPuzzle[row][col];
-                duplicatedPuzzle[row][col] = duplicatedPuzzle[newRow][newCol];
-                duplicatedPuzzle[newRow][newCol] = temp;
-                // Setting the null point in the right place
-                duplicatedNode.setEmpty_point(new Point(newRow, newCol));
-                // Setting the modified puzzle to the duplicated node
-                duplicatedNode.setPuzzle(duplicatedPuzzle);
-                //Adding the node to the graph
-                g.add_generated_Node(duplicatedNode);
-                // Add an edge between the original node and the duplicated node
-                g.addEdge(node.getID(), duplicatedNode.getID());
-
-                //Clearing the set to generate the new node from scratch
                 nums.clear();
             }
-        }
+//        }
         return g;
     }
+
+    private void generate_neighbors(int row, int col, Node node) {
+        int[] neighbors = {-1, 1};
+
+        // Looping over the "neighbors"
+        for (int i = 0; i < 2; i++) {
+            int new_col = neighbors[i] + col;
+            int new_row = neighbors[i] + row;
+
+            // Checking coordinates for row swap
+            if (new_row >= 0 && new_row < size) {
+                int[][] tmp_puzzle_row = clonePuzzle(node.getPuzzle());
+                swapElements(tmp_puzzle_row, row, col, new_row, col);
+
+                Node new_node_row = new Node(node, get_increase_Id(), new Point(new_row, col));
+                new_node_row.setPuzzle(tmp_puzzle_row);
+                add_generated_Node(new_node_row);
+                // Exclude the original node from being added as a neighbor
+                if (!new_node_row.equals(node)) {
+                    addEdge(node.getID(), new_node_row.getID());
+                }
+            }
+
+            // Checking coordinates for column swap
+            if (new_col >= 0 && new_col < size) {
+                int[][] tmp_puzzle_col = clonePuzzle(node.getPuzzle());
+                swapElements(tmp_puzzle_col, row, col, row, new_col);
+
+                Node new_node_col = new Node(node, get_increase_Id(), new Point(row, new_col));
+                new_node_col.setPuzzle(tmp_puzzle_col);
+                add_generated_Node(new_node_col);
+                // Exclude the original node from being added as a neighbor
+                if (!new_node_col.equals(node)) {
+                    addEdge(node.getID(), new_node_col.getID());
+                }
+            }
+        }
+    }
+
+
+
+    // Helper method to clone a puzzle
+    private int[][] clonePuzzle(int[][] puzzle) {
+        int[][] clone = new int[puzzle.length][];
+        for (int i = 0; i < puzzle.length; i++) {
+            clone[i] = puzzle[i].clone();
+        }
+        return clone;
+    }
+
+    // Helper method to swap elements in a puzzle
+    private void swapElements(int[][] puzzle, int row1, int col1, int row2, int col2) {
+        int temp = puzzle[row1][col1];
+        puzzle[row1][col1] = puzzle[row2][col2];
+        puzzle[row2][col2] = temp;
+    }
+
+
+
 
     private static int generate_random_number(int numOfElements, Set<Integer> nums) {
         Random random = new Random();
@@ -195,16 +230,28 @@ public class Graph {
     }
 
 
-    public void print_graph(){
-        connections.forEach((k,v)->{
-            System.out.println("Node number : " + k);
-            Node node = getNodeByID(k).keySet().iterator().next();
-            System.out.println("Neighbors: ");
-            v.get(node).forEach(node1 -> node1.print_puzzle());
-        });
-        System.out.println("***********************************************");
+    public void print_graph() {
+        for (int id : connections.keySet()) {
+            Map<Node, Set<Node>> value = connections.get(id);
+            Node node = value.keySet().iterator().next();
+            Set<Node> neighbors = value.get(node);
+
+            System.out.println("Node number : " + id);
+            node.print_puzzle();
+
+            if (!neighbors.isEmpty()) {
+                System.out.println("Neighbors:");
+                for (Node neighbor : neighbors) {
+                    System.out.println("Neighbor id : " + neighbor.getID());
+                    neighbor.print_puzzle();
+                    System.out.println("--------------------");
+                }
+            }
+            System.out.println("***********************************************");
+        }
     }
-//This function will be called from the main and generate the graph from scratch
+
+    //This function will be called from the main and generate the graph from scratch
     public static Graph menu() {
         boolean stop = false;
         Scanner scanner = new Scanner(System.in);
