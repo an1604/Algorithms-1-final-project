@@ -204,8 +204,8 @@ public class Graph {
         });
         System.out.println("***********************************************");
     }
-
-    public static void main(String[] args) {
+//This function will be called from the main and generate the graph from scratch
+    public static Graph menu() {
         boolean stop = false;
         Scanner scanner = new Scanner(System.in);
         System.out.println("What is the size of the puzzle?");
@@ -245,6 +245,7 @@ public class Graph {
                     break;
             }
         }
+        return graph;
     }
 
 }

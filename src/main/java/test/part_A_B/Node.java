@@ -101,7 +101,4 @@ public class Node {
         return ID;
     }
 
-    public static void main(String[] args) {
-        Node node = new Node(4 ,1);
-    }
 }
