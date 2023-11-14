@@ -23,6 +23,9 @@ The Node class represents a state of the puzzle. It includes the puzzle configur
 ### Point Class
 The Point class represents a position on the puzzle board. It includes methods for retrieving and updating coordinates.
 
+### BFS Class
+The BFS class is implemented to perform Breadth-First Search traversal on the puzzle graph, starting from a given node.
+
 ## Project Stages
 
 ### Stage A: Graph Implementation
@@ -37,5 +40,3 @@ The Breadth-First Search algorithm is implemented and used to solve both "Puzzle
 ### Stage D: A* Algorithm
 The A* algorithm is implemented and used to solve both puzzles with three different heuristic functions.
 
-### BFS Class
-The BFS class is implemented to perform Breadth-First Search traversal on the puzzle graph, starting from a given node.
