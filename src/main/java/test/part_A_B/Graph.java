@@ -1,12 +1,14 @@
 package test.part_A_B;
 
+import States.FinishState;
+import States.State;
 import test.Part_C.BFS;
 
 import java.util.*;
 
 public class Graph {
     private Map<Integer , Map<Node , Set<Node>>> connections ;
-    private final int[][] final_state;
+    private State final_state;
     private  int size;
 
     private  int id;
@@ -23,29 +25,13 @@ public class Graph {
         this.connections = new HashMap<>();
         this.size = size;
         this.id =1 ;
-        final_state = initialize_final_state();
-    }
-
-    private int[][] initialize_final_state() {
-        // Initialize the final state
-        int state_size = (size * size) - 1;
-        int[][] final_state = new int[size][size];
-
-        for (int i = 0; i < size; i++) {
-            // Getting size elements in each row
-            for (int j = 0; j < size; j++) {
-                final_state[i][j] = i * size + j + 1;
-            }
-        }
-
-        // The last place is the empty one.
-        final_state[size - 1][size - 1] = -1;
-
-        return final_state;
+        final_state = FinishState.getFinishState(size);
     }
 
 
-    public int[][] getFinal_state() {
+
+
+    public State getFinal_state() {
         return final_state;
     }
 
@@ -325,7 +311,7 @@ public class Graph {
         this.id =1;
 
         //Creating the node and add to the graph
-        Node final_state_node = new Node(size , get_increase_Id(), new Point(size-1,size-1), getFinal_state());
+        Node final_state_node = new Node(size , get_increase_Id(), new Point(size-1,size-1), final_state.getPuzzleArr());
         add_generated_Node(final_state_node);
 
         //Start to generate states from the final state using BFS

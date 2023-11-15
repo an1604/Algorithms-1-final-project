@@ -1,5 +1,8 @@
 package test.part_A_B;
 
+import States.RegulaerState;
+import States.State;
+
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -14,7 +17,7 @@ public class Node {
     private int ID;
     private Point empty_point;
 
-    private String state;
+    private State state;
 
     // copy constructor
     public Node(Node node, int increaseId , Point p) {
@@ -23,7 +26,7 @@ public class Node {
      this.ID = increaseId;
      this.visited = false;
      this.empty_point = p;
-     this.state = initialize_state();
+     this.state =new RegulaerState(size , puzzle);
     }
 //Ctor for the final state case.
     public Node(int size, int increaseId, Point point, int[][] finalState) {
@@ -31,20 +34,11 @@ public class Node {
         this.ID = increaseId;
         this.empty_point = point;
         this.puzzle = finalState;
-        this.state = initialize_state();
+        this.state =new RegulaerState(size , puzzle);
     }
 
 
-    private String initialize_state() {
-        StringBuilder sb = new StringBuilder();
-        for (int[] nums : this.puzzle) {
-            for (int num : nums) {
-                sb.append(num == -1 ? "null" : String.format("%2d", num) + " ");
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
+
 
     // regular Ctor
     public Node(int size , int id) {
@@ -59,7 +53,7 @@ public class Node {
             initialPuzzle();
 
     }
-    public String getState() {
+    public State getState() {
         return state;
     }
     public int getSize() {
@@ -89,7 +83,7 @@ public class Node {
     public void setPuzzle(int[][] puzzle) {
         this.puzzle = puzzle;
         //After we're setting the puzzle, we initialize the state
-        this.state = initialize_state();
+        this.state = new RegulaerState(size , puzzle);
     }
 
     public void setEmpty_point(Point empty_point) {
@@ -138,13 +132,13 @@ public class Node {
             }
         }
         // Initialize the new state of the puzzle
-        this.state = initialize_state();
+        this.state =new RegulaerState(size , puzzle);
         System.out.println("Done!");
         print_puzzle();
     }
 
     public void print_puzzle() {
-        System.out.println(state);
+        state.print();
     }
 
 
