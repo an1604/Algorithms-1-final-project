@@ -17,19 +17,29 @@ public class BFS {
         this.graph = graph;
         this.size = graph.getSize();
         this.parentMap = new HashMap<>();
+        this.final_state = initialize_Final_State();
+    }
 
-        // Initialize the final state
-        int state_size = (size * size) - 1;
+
+    private String initialize_Final_State() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 1; i <= state_size; i++) {
-            // Getting size elements in each row
+        int count = 1;
+
+        // Append the elements to the StringBuilder
+        for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                sb.append(i + " , ");
+                if (count < size * size) {
+                    sb.append(String.format("%2d ", count));
+                    count++;
+                } else {
+                    // Append "null" for the empty space
+                    sb.append("null ");
+                }
             }
             sb.append("\n");
         }
 
-        this.final_state = sb.toString();
+        return sb.toString();
     }
 
     public void traverse() {
@@ -65,7 +75,8 @@ public class BFS {
     }
 
     private boolean isFinalState(Node node) {
-        return Arrays.deepToString(node.getPuzzle()).equals(final_state);
+        return final_state.replaceAll("\\s", "").equals(node.getState().replaceAll("\\s", ""));
+
     }
 
     private void printPath(Node current) {

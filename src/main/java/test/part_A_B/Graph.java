@@ -78,7 +78,6 @@ public class Graph {
         Map<Node , Set<Node>> nodeMap = new HashMap<>();
         nodeMap.put(node,new HashSet<>());
         connections.put(node.getID() ,nodeMap);
-        System.out.println("Node added successfully , node id is : " + node.getID());
     }
 
     public void removeNode(int id){
@@ -98,7 +97,6 @@ public class Graph {
             } catch (NullPointerException e) {
                 System.out.println(e.getMessage());
             }
-            System.out.println("Done!");
             return;
         }
         System.out.println("Cannot make the edge because this step is not legal!");
