@@ -19,6 +19,7 @@ public class Node {
 
     private State state;
 
+
     // copy constructor
     public Node(Node node, int increaseId , Point p) {
      this.size = node.size;

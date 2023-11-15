@@ -26,9 +26,10 @@ public class FinishState extends State {
         return true;
     }
 
-    public int getSize() {
+    public static int getSize() {
         return size;
     }
+
 
     private static String initializeFinalStateString(int size) {
         StringBuilder sb = new StringBuilder();

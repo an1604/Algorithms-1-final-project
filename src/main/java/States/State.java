@@ -7,7 +7,7 @@ public abstract class State {
 
     protected String puzzleRepresentation;
 
-    protected int size;
+    protected static int size;
 
     public State(int size, int[][] puzzleArr) {
         this.size = size;
@@ -24,7 +24,7 @@ public abstract class State {
         return puzzleRepresentation;
     }
 
-    public int getSize() {
+    public static int getSize() {
         return size;
     }
 
