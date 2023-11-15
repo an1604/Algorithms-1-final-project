@@ -41,7 +41,8 @@ public class Graph {
         connections.put(node.getID() ,nodeMap);
         int row = node.getEmpty_point().getX();
         int col = node.getEmpty_point().getY();
-        generate_neighbors(row,col,node);
+        //generate_neighbors(row,col,node);
+        get_states(node);
         System.out.println("Node added successfully , node id is : " + node.getID());
     }
 
@@ -65,12 +66,8 @@ public class Graph {
         boolean res = check_connection(node1, node2) && (id1 != id2);
         if (res) {
             try {
-                // add the exact node and all of his neighbors
                 connections.get(id1).get(node1).add(node2);
-                connections.get(id1).get(node1).addAll(getNeighbors(node2.getID()));
-
                 connections.get(id2).get(node2).add(node1);
-                connections.get(id2).get(node2).addAll(getNeighbors(node1.getID()));
             } catch (NullPointerException e) {
                 System.out.println(e.getMessage());
             }
@@ -138,70 +135,116 @@ public class Graph {
             // Placing the null (-1) value
             puzzle[emp_index.getX()][emp_index.getY()] = -1;
             node.setEmpty_point(emp_index);
-            int num = 0;
-            // Generating the number of elements (for size 4 -> 4*4-1 =15 , for size 5 -> 5*5-1 =24 ...)
-            int num_of_elements = (size * size) - 1;
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (puzzle[i][j] != -1) {
-                        //generating random number that not includes in the nums set...
-                        num = generate_random_number(num_of_elements, nums);
-                        puzzle[i][j] = num;
-                    }
-                }
-            }
-            // Setting the puzzle to the first node
-            node.setPuzzle(puzzle);
+            // Randomly initialize the puzzle of the node
+            g.initialize_puzzle(node,puzzle, nums);
+
             g.add_generated_Node(node);
 
-                // Switch the empty index with a neighboring index
-                int row = emp_index.getX();
-                int col = emp_index.getY();
-                //Generate all neighbors
-                g.generate_neighbors(row,col, node);
-
+            // Generating the states from this node (move the null up,down,left,right)
+            g.get_states(node);
                 nums.clear();
             }
-//        }
         return g;
     }
+//Generating the moving states for a given node
+    private void get_states(Node node) {
+        // For the clone puzzle function , to make sure that we call just when we need to
+        boolean is_inside_if = false;
 
-    private void generate_neighbors(int row, int col, Node node) {
-        int[] neighbors = {-1, 1};
+        int row = node.getEmpty_point().getX();
+        int col = node.getEmpty_point().getY();
+        int [][] tmp_puzzle = clonePuzzle(node.getPuzzle());
+        //Checking each one
 
-        // Looping over the "neighbors"
-        for (int i = 0; i < 2; i++) {
-            int new_col = neighbors[i] + col;
-            int new_row = neighbors[i] + row;
+//        generate_up(row , col , tmp_puzzle , )
+        //Up
+        int up_idx_row = row - 1;
+        // If we still in bounds, start to generate
+        if (up_idx_row<size && up_idx_row >=0 ){
+            is_inside_if = true;
+            // Generating the new puzzle state
+            this.swapElements(tmp_puzzle,up_idx_row,col ,row,col);
+            Node up = new Node(node,get_increase_Id(),new Point(up_idx_row,col));
+            up.setPuzzle(tmp_puzzle);
+            //Adding the node to the graph
+            this.add_generated_Node(up);
+            // Adding an edge between the nodes
+            this.addEdge(node.getID() , up.getID());
+        }
 
-            // Checking coordinates for row swap
-            if (new_row >= 0 && new_row < size) {
-                int[][] tmp_puzzle_row = clonePuzzle(node.getPuzzle());
-                swapElements(tmp_puzzle_row, row, col, new_row, col);
+        //Resetting the puzzle
+        if (is_inside_if) {
+            tmp_puzzle = clonePuzzle(node.getPuzzle());
+            is_inside_if = false;
+        }
 
-                Node new_node_row = new Node(node, get_increase_Id(), new Point(new_row, col));
-                new_node_row.setPuzzle(tmp_puzzle_row);
-                add_generated_Node(new_node_row);
-                // Exclude the original node from being added as a neighbor
-                if (!new_node_row.equals(node)) {
-                    addEdge(node.getID(), new_node_row.getID());
-                }
-            }
+        //Down
+        int down_idx_row = row +1;
+        if(down_idx_row<size && down_idx_row>=0){
+            is_inside_if = true;
+            this.swapElements(tmp_puzzle,down_idx_row,col ,row,col);
+            Node down = new Node(node,get_increase_Id(),node.getEmpty_point());
+            down.setPuzzle(tmp_puzzle);
+            //Adding the node to the graph
+            this.add_generated_Node(down);
+            // Adding an edge between the nodes
+            this.addEdge(node.getID() , down.getID());
+        }
 
-            // Checking coordinates for column swap
-            if (new_col >= 0 && new_col < size) {
-                int[][] tmp_puzzle_col = clonePuzzle(node.getPuzzle());
-                swapElements(tmp_puzzle_col, row, col, row, new_col);
+        //Resetting the puzzle
+        if (is_inside_if) {
+            tmp_puzzle = clonePuzzle(node.getPuzzle());
+            is_inside_if = false;
+        }
 
-                Node new_node_col = new Node(node, get_increase_Id(), new Point(row, new_col));
-                new_node_col.setPuzzle(tmp_puzzle_col);
-                add_generated_Node(new_node_col);
-                // Exclude the original node from being added as a neighbor
-                if (!new_node_col.equals(node)) {
-                    addEdge(node.getID(), new_node_col.getID());
+        // Right
+        int right_idx_col = col +1;
+
+        if (right_idx_col <size && right_idx_col>=0){
+            is_inside_if = true;
+            this.swapElements(tmp_puzzle,row,right_idx_col ,row,col);
+            Node right = new Node(node,get_increase_Id(),node.getEmpty_point());
+            right.setPuzzle(tmp_puzzle);
+            //Adding the node to the graph
+            this.add_generated_Node(right);
+            // Adding an edge between the nodes
+            this.addEdge(node.getID() , right.getID());
+        }
+
+        //Resetting the puzzle
+        if (is_inside_if) {
+            tmp_puzzle = clonePuzzle(node.getPuzzle());
+        }
+
+        // Left
+        int left_idx_col = col -1;
+        if (left_idx_col <size && left_idx_col>=0 ){
+            this.swapElements(tmp_puzzle,row,left_idx_col ,row,col);
+            Node left = new Node(node,get_increase_Id(),node.getEmpty_point());
+            left.setPuzzle(tmp_puzzle);
+            //Adding the node to the graph
+            this.add_generated_Node(left);
+            // Adding an edge between the nodes
+            this.addEdge(node.getID() , left.getID());
+        }
+
+    }
+//Randomly initialization of the puzzle
+    private void initialize_puzzle(Node node, int[][] puzzle, Set<Integer> nums) {
+        int num = 0;
+        // Generating the number of elements (for size 4 -> 4*4-1 =15 , for size 5 -> 5*5-1 =24 ...)
+        int num_of_elements = (size * size) - 1;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (puzzle[i][j] != -1) {
+                    //generating random number that not includes in the nums set...
+                    num = generate_random_number(num_of_elements, nums);
+                    puzzle[i][j] = num;
                 }
             }
         }
+        // Setting the puzzle to the first node
+        node.setPuzzle(puzzle);
     }
 
 
