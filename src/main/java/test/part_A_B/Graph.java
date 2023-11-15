@@ -310,7 +310,12 @@ public class Graph {
     public Node get_random_node_for_bfs(){
         Random r = new Random();
         int index = Math.abs(r.nextInt() % id);
-        return connections.get(index).keySet().iterator().next();
+        try {
+            return connections.get(index).keySet().iterator().next();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

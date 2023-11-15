@@ -45,29 +45,35 @@ public class BFS {
     public void traverse() {
         Queue<Node> queue = new LinkedList<>();
         queue.add(this.start_node);
-
-        while (!queue.isEmpty()) {
-            Node current = queue.poll();
-            // Avoiding cycles
-            if (!current.isVisited()) {
-                current.setVisited(true);
-                // If the current node matches the final state, print the path and exit
-                if (isFinalState(current)) {
-                    printPath(current);
-                    return;
-                }
-                // We want to generate the states of the exact node and append them to the Q
-                graph.get_states(current);
-                // Enqueue unvisited neighbors and update parentMap
-                for (Node neighbor : graph.getNeighbors(current.getID())){
-                    //Checking if the node is visited or not
-                    if(!neighbor.isVisited()){
-                        //Updating the Q and the Parent Map to make sure where this node came from
-                        queue.add(neighbor);
-                        parentMap.put(neighbor.getID() , current.getID());
+        // Limit the number of movements to 5000
+        int steps = 0;
+        while (!queue.isEmpty() && steps<5000) {
+            try {
+                Node current = queue.poll();
+                // Avoiding cycles
+                if (!current.isVisited()) {
+                    current.setVisited(true);
+                    // If the current node matches the final state, print the path and exit
+                    if (isFinalState(current)) {
+                        printPath(current);
+                        return;
                     }
+                    // We want to generate the states of the exact node and append them to the Q
+                    graph.get_states(current);
+                    // Enqueue unvisited neighbors and update parentMap
+                    for (Node neighbor : graph.getNeighbors(current.getID())) {
+                        //Checking if the node is visited or not
+                        if (!neighbor.isVisited()) {
+                            //Updating the Q and the Parent Map to make sure where this node came from
+                            queue.add(neighbor);
+                            parentMap.put(neighbor.getID(), current.getID());
+                        }
 
+                    }
+                    steps++;
                 }
+            } catch (NullPointerException e){
+                System.out.println(e.getMessage() + " in step : " + steps);
             }
         }
 
