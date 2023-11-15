@@ -25,6 +25,15 @@ public class Node {
      this.empty_point = p;
      this.state = initialize_state();
     }
+//Ctor for the final state case.
+    public Node(int size, int increaseId, Point point, int[][] finalState) {
+        this.size = size;
+        this.ID = increaseId;
+        this.empty_point = point;
+        this.puzzle = finalState;
+        this.state = initialize_state();
+    }
+
 
     private String initialize_state() {
         StringBuilder sb = new StringBuilder();

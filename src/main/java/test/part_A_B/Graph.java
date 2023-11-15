@@ -1,10 +1,12 @@
 package test.part_A_B;
 
+import test.Part_C.BFS;
+
 import java.util.*;
 
 public class Graph {
     private Map<Integer , Map<Node , Set<Node>>> connections ;
-
+    private final int[][] final_state;
     private  int size;
 
     private  int id;
@@ -21,7 +23,32 @@ public class Graph {
         this.connections = new HashMap<>();
         this.size = size;
         this.id =1 ;
+        final_state = initialize_final_state();
     }
+
+    private int[][] initialize_final_state() {
+        // Initialize the final state
+        int state_size = (size * size) - 1;
+        int[][] final_state = new int[size][size];
+
+        for (int i = 0; i < size; i++) {
+            // Getting size elements in each row
+            for (int j = 0; j < size; j++) {
+                final_state[i][j] = i * size + j + 1;
+            }
+        }
+
+        // The last place is the empty one.
+        final_state[size - 1][size - 1] = -1;
+
+        return final_state;
+    }
+
+
+    public int[][] getFinal_state() {
+        return final_state;
+    }
+
     public int getSize() {
         return size;
     }
@@ -79,35 +106,15 @@ public class Graph {
 
 
     private boolean check_connection(Node node1, Node node2) {
-
-        // Counter of how many positions are different from node 1 to node 2
-        int differences = 0;
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                // Checking if there is a change between 2 places
-                if (node1.getPuzzle()[i][j] != node2.getPuzzle()[i][j]) {
-                    // Chekcing if we are in the -1 area
-                    if (node1.getPuzzle()[i][j]==-1 || node2.getPuzzle()[i][j]==-1) {
-                        // Checking if the change involves the empty place and moves correctly (only in 1 place for any direction)
-                        if (node1.getEmpty_point().getX() < node2.getEmpty_point().getX() && node1.getEmpty_point().getY() < node2.getEmpty_point().getY()) {
-                            return false;
-                        } else if (node1.getEmpty_point().getX() > node2.getEmpty_point().getX() && node1.getEmpty_point().getY() > node2.getEmpty_point().getY()) {
-                            return false;
-                        } else return true;
-                    }
-
-
-                    differences += 1;
-                }
-
-                // If there is more than 1 change in the places, the edge cannot be legal
-                if (differences > 1) {
-                    return false;
-                }
-            }
+        // Getting the empty points for coordinate check
+        try {
+            Point p1 = node1.getEmpty_point();
+            Point p2 = node2.getEmpty_point();
+            return p1.check_coordinate(p2);
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
-
-        return true;
+        return false;
     }
 
 
@@ -147,8 +154,8 @@ public class Graph {
         return g;
     }
 //Generating the moving states for a given node
-    private void get_states(Node node) {
-        // For the clone puzzle function , to make sure that we call just when we need to
+    public void get_states(Node node) {
+        // For the clone puzzle function, to make sure that we call just when we need to
         boolean is_inside_if = false;
 
         int row = node.getEmpty_point().getX();
@@ -183,7 +190,7 @@ public class Graph {
         if(down_idx_row<size && down_idx_row>=0){
             is_inside_if = true;
             this.swapElements(tmp_puzzle,down_idx_row,col ,row,col);
-            Node down = new Node(node,get_increase_Id(),node.getEmpty_point());
+            Node down = new Node(node,get_increase_Id(),new Point(down_idx_row,col));
             down.setPuzzle(tmp_puzzle);
             //Adding the node to the graph
             this.add_generated_Node(down);
@@ -203,7 +210,7 @@ public class Graph {
         if (right_idx_col <size && right_idx_col>=0){
             is_inside_if = true;
             this.swapElements(tmp_puzzle,row,right_idx_col ,row,col);
-            Node right = new Node(node,get_increase_Id(),node.getEmpty_point());
+            Node right = new Node(node,get_increase_Id(),new Point(row,right_idx_col));
             right.setPuzzle(tmp_puzzle);
             //Adding the node to the graph
             this.add_generated_Node(right);
@@ -220,7 +227,7 @@ public class Graph {
         int left_idx_col = col -1;
         if (left_idx_col <size && left_idx_col>=0 ){
             this.swapElements(tmp_puzzle,row,left_idx_col ,row,col);
-            Node left = new Node(node,get_increase_Id(),node.getEmpty_point());
+            Node left = new Node(node,get_increase_Id(),new Point(row,left_idx_col));
             left.setPuzzle(tmp_puzzle);
             //Adding the node to the graph
             this.add_generated_Node(left);
@@ -229,7 +236,7 @@ public class Graph {
         }
 
     }
-//Randomly initialization of the puzzle
+//Random initialization of the puzzle
     private void initialize_puzzle(Node node, int[][] puzzle, Set<Integer> nums) {
         int num = 0;
         // Generating the number of elements (for size 4 -> 4*4-1 =15 , for size 5 -> 5*5-1 =24 ...)
@@ -307,6 +314,41 @@ public class Graph {
         int index = Math.abs(r.nextInt() % id);
         return connections.get(index).keySet().iterator().next();
     }
+
+
+    public Graph generate_n_steps_from_final_state(int n){
+        //Making a new graph
+        this.connections.clear();
+        this.id =1;
+
+        //Creating the node and add to the graph
+        Node final_state_node = new Node(size , get_increase_Id(), new Point(size-1,size-1), getFinal_state());
+        add_generated_Node(final_state_node);
+
+        //Start to generate states from the final state using BFS
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(final_state_node);
+        while (n>0){
+            Node node = queue.poll();
+            if(!node.isVisited()) {
+                get_states(node);
+                for(Node neighbor : getNeighbors(node.getID())){
+                    if(!neighbor.isVisited())
+                        queue.add(neighbor);
+                }
+                //We're decreasing n only when we generated new state!
+                n--;
+            }
+        }
+
+        return this;
+    }
+
+
+
+
+
+
     //This function will be called from the main and generate the graph from scratch
     public static Graph menu() {
         boolean stop = false;
@@ -317,7 +359,7 @@ public class Graph {
         Graph graph = new Graph(size);
         System.out.println("Lets build the graph...");
         while(!stop){
-            System.out.println("Enter your choice : \n 1) Create new node\n 2) Create new edge \n 3)Remove node \n 4) Print the graph \n 5) Generate random graph\n 6)Exit");
+            System.out.println("Enter your choice : \n 1) Create new node\n 2) Create new edge \n 3)Remove node \n 4) Print the graph \n 5) Generate random graph\n  6) Generate n steps from the final state \n7)Exit");
             choice = scanner.nextLine();
             switch (choice){
                 case "1":
@@ -342,8 +384,16 @@ public class Graph {
                     graph = generate_random_graph(size);
                     break;
                 case "6":
+                    System.out.println("Choose your n :");
+                    int n = scanner.nextInt();
+                    graph = graph.generate_n_steps_from_final_state(n);
+                    break;
+                case "7":
                     System.out.println("Exiting...");
                     stop =true;
+                    break;
+                default:
+                    System.out.println("I don't understand, try again. ");
                     break;
             }
         }

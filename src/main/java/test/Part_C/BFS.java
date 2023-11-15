@@ -41,22 +41,22 @@ public class BFS {
             // Avoiding cycles
             if (!current.isVisited()) {
                 current.setVisited(true);
-                System.out.println("Current node : ");
-                current.print_puzzle();
-
                 // If the current node matches the final state, print the path and exit
                 if (isFinalState(current)) {
                     printPath(current);
                     return;
                 }
-
-                // Getting the set of neighbors to add to the queue
-                Set<Node> neighbors = graph.getNeighbors(current.getID());
-                for (Node neighbor : neighbors) {
-                    if (!neighbor.isVisited()) {
+                // We want to generate the states of the exact node and append them to the Q
+                graph.get_states(current);
+                // Enqueue unvisited neighbors and update parentMap
+                for (Node neighbor : graph.getNeighbors(current.getID())){
+                    //Checking if the node is visited or not
+                    if(!neighbor.isVisited()){
+                        //Updating the Q and the Parent Map to make sure where this node came from
                         queue.add(neighbor);
-                        parentMap.put(neighbor.getID(), current.getID());  // Update parent-child relationship
+                        parentMap.put(neighbor.getID() , current.getID());
                     }
+
                 }
             }
         }
