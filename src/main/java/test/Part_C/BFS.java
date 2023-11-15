@@ -17,19 +17,29 @@ public class BFS {
         this.graph = graph;
         this.size = graph.getSize();
         this.parentMap = new HashMap<>();
+        this.final_state = initialize_Final_State();
+    }
 
-        // Initialize the final state
-        int state_size = (size * size) - 1;
+
+    private String initialize_Final_State() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 1; i <= state_size; i++) {
-            // Getting size elements in each row
+        int count = 1;
+
+        // Append the elements to the StringBuilder
+        for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                sb.append(i + " , ");
+                if (count < size * size) {
+                    sb.append(String.format("%2d ", count));
+                    count++;
+                } else {
+                    // Append "null" for the empty space
+                    sb.append("null ");
+                }
             }
             sb.append("\n");
         }
 
-        this.final_state = sb.toString();
+        return sb.toString();
     }
 
     public void traverse() {
@@ -41,22 +51,22 @@ public class BFS {
             // Avoiding cycles
             if (!current.isVisited()) {
                 current.setVisited(true);
-                System.out.println("Current node : ");
-                current.print_puzzle();
-
                 // If the current node matches the final state, print the path and exit
                 if (isFinalState(current)) {
                     printPath(current);
                     return;
                 }
-
-                // Getting the set of neighbors to add to the queue
-                Set<Node> neighbors = graph.getNeighbors(current.getID());
-                for (Node neighbor : neighbors) {
-                    if (!neighbor.isVisited()) {
+                // We want to generate the states of the exact node and append them to the Q
+                graph.get_states(current);
+                // Enqueue unvisited neighbors and update parentMap
+                for (Node neighbor : graph.getNeighbors(current.getID())){
+                    //Checking if the node is visited or not
+                    if(!neighbor.isVisited()){
+                        //Updating the Q and the Parent Map to make sure where this node came from
                         queue.add(neighbor);
-                        parentMap.put(neighbor.getID(), current.getID());  // Update parent-child relationship
+                        parentMap.put(neighbor.getID() , current.getID());
                     }
+
                 }
             }
         }
@@ -65,7 +75,8 @@ public class BFS {
     }
 
     private boolean isFinalState(Node node) {
-        return Arrays.deepToString(node.getPuzzle()).equals(final_state);
+        return final_state.replaceAll("\\s", "").equals(node.getState().replaceAll("\\s", ""));
+
     }
 
     private void printPath(Node current) {

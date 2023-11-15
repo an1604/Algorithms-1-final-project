@@ -9,6 +9,7 @@ public class Main {
         Graph graph = Graph.menu();
         Node rand_node  = graph.get_random_node_for_bfs();
         BFS bfs = new BFS(rand_node,graph);
+        System.out.println("Searching solution via BFS...");
         bfs.traverse();
     }
 }

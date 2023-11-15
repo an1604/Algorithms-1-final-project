@@ -23,6 +23,27 @@ public class Node {
      this.ID = increaseId;
      this.visited = false;
      this.empty_point = p;
+     this.state = initialize_state();
+    }
+//Ctor for the final state case.
+    public Node(int size, int increaseId, Point point, int[][] finalState) {
+        this.size = size;
+        this.ID = increaseId;
+        this.empty_point = point;
+        this.puzzle = finalState;
+        this.state = initialize_state();
+    }
+
+
+    private String initialize_state() {
+        StringBuilder sb = new StringBuilder();
+        for (int[] nums : this.puzzle) {
+            for (int num : nums) {
+                sb.append(num == -1 ? "null" : String.format("%2d", num) + " ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     // regular Ctor
@@ -36,6 +57,7 @@ public class Node {
         String s = scanner.nextLine();
         if (s.equals("no"))
             initialPuzzle();
+
     }
     public String getState() {
         return state;
@@ -66,6 +88,8 @@ public class Node {
 
     public void setPuzzle(int[][] puzzle) {
         this.puzzle = puzzle;
+        //After we're setting the puzzle, we initialize the state
+        this.state = initialize_state();
     }
 
     public void setEmpty_point(Point empty_point) {
@@ -113,20 +137,14 @@ public class Node {
                }
             }
         }
+        // Initialize the new state of the puzzle
+        this.state = initialize_state();
         System.out.println("Done!");
         print_puzzle();
     }
 
     public void print_puzzle() {
-        StringBuilder sb = new StringBuilder();
-        for (int[] nums : this.puzzle) {
-            for (int num : nums) {
-                sb.append(num == -1 ? "null" : String.format("%2d", num) + " ");
-            }
-            sb.append("\n");
-        }
-        this.state = sb.toString();
-        System.out.println(sb.toString());
+        System.out.println(state);
     }
 
 
