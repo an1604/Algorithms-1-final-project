@@ -2,6 +2,7 @@ package test.part_A_B;
 
 import States.FinishState;
 import States.State;
+import test.Part_C.DFS;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,6 +17,7 @@ public class Graph {
     private int depth;
 
     private Set<Node> checked_nodes; //To avoiding cycles
+
 
     public  int getId() {
         return this.id;
