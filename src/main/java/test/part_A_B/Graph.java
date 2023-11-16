@@ -375,20 +375,21 @@ public class Graph {
             Node node = value.keySet().iterator().next();
             Set<Node> neighbors = value.get(node);
 
-            System.out.println("Node number : " + id + " depth : " + node.getDepth());
+            System.out.println("Node number: " + id + " | Depth: " + node.getDepth());
+            System.out.println("Puzzle:");
             node.print_puzzle();
 
             if (!neighbors.isEmpty()) {
-                System.out.println("Neighbors:");
+                System.out.println("Edges:");
                 for (Node neighbor : neighbors) {
-                    System.out.println("Neighbor id : " + neighbor.getID());
-                    neighbor.print_puzzle();
-                    System.out.println("--------------------");
+                    System.out.println("  " + id + " -> " + neighbor.getID());
                 }
             }
+
             System.out.println("***********************************************");
         }
     }
+
 
     public Node get_random_node_for_bfs(){
         Random r = new Random();
@@ -500,7 +501,16 @@ public class Graph {
         }
         return graph;
     }
+    //Disconnect the edge between given  2 nodes.
+    public void remove_edge(int startNode, int endNode) {
+        //Getting the set of neighbors for each node
+        Set<Node> start_node = getNeighbors(startNode);
+        Set<Node> end_node = getNeighbors(endNode);
 
+        // Removing the node from each set
+        start_node.remove(getNodeByID(endNode));
+        end_node.remove(getNodeByID(startNode));
+    }
 }
 
 
