@@ -15,7 +15,7 @@ public class Graph {
     private  int id;
 
     private int depth;
-    private Set<Node> checked_nodes; //To avoiding cycles
+
 
 
     public  int getId() {
@@ -32,7 +32,6 @@ public class Graph {
         this.id =1 ;
         final_state = FinishState.getFinishState(size);
         this.depth=0;
-        this.checked_nodes = new HashSet<>();
     }
 
 
