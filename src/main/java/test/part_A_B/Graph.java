@@ -2,6 +2,7 @@ package test.part_A_B;
 
 import States.FinishState;
 import States.State;
+import test.Part_C.DFS;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,7 +16,7 @@ public class Graph {
 
     private int depth;
 
-    private Set<Node> checked_nodes; //To avoiding cycles
+
 
     public  int getId() {
         return this.id;
@@ -31,7 +32,6 @@ public class Graph {
         this.id =1 ;
         final_state = FinishState.getFinishState(size);
         this.depth=0;
-        this.checked_nodes = new HashSet<>();
     }
 
 
@@ -303,6 +303,9 @@ public class Graph {
             // Adding an edge between the nodes
             this.addEdge(node.getID() , node1.getID());
         }
+        //after we made the changes, call dfs to search for cycles and remove them
+//        DFS dfs = new DFS(this);
+//        dfs.dfs();
     }
     //This method checks if new state is already inside the graph
     private Node getNodeIfExists(Node targetNode) {
@@ -375,20 +378,21 @@ public class Graph {
             Node node = value.keySet().iterator().next();
             Set<Node> neighbors = value.get(node);
 
-            System.out.println("Node number : " + id + " depth : " + node.getDepth());
+            System.out.println("Node number: " + id + " | Depth: " + node.getDepth());
+            System.out.println("Puzzle:");
             node.print_puzzle();
 
             if (!neighbors.isEmpty()) {
-                System.out.println("Neighbors:");
+                System.out.println("Edges:");
                 for (Node neighbor : neighbors) {
-                    System.out.println("Neighbor id : " + neighbor.getID());
-                    neighbor.print_puzzle();
-                    System.out.println("--------------------");
+                    System.out.println("  " + id + " -> " + neighbor.getID());
                 }
             }
+
             System.out.println("***********************************************");
         }
     }
+
 
     public Node get_random_node_for_bfs(){
         Random r = new Random();
@@ -500,7 +504,16 @@ public class Graph {
         }
         return graph;
     }
+    //Disconnect the edge between given  2 nodes.
+    public void remove_edge(int startNode, int endNode) {
+        //Getting the set of neighbors for each node
+        Set<Node> start_node = getNeighbors(startNode);
+        Set<Node> end_node = getNeighbors(endNode);
 
+        // Removing the node from each set
+        start_node.remove(getNodeByID(endNode));
+        end_node.remove(getNodeByID(startNode));
+    }
 }
 
 
