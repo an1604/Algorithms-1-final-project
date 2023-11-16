@@ -2,9 +2,9 @@ package test.part_A_B;
 
 import States.FinishState;
 import States.State;
-import test.Part_C.BFS;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Graph {
     private Map<Integer , Map<Node , Set<Node>>> connections ;
@@ -12,6 +12,10 @@ public class Graph {
     private  int size;
 
     private  int id;
+
+    private int depth;
+
+    private Set<Node> checked_nodes; //To avoiding cycles
 
     public  int getId() {
         return this.id;
@@ -26,6 +30,8 @@ public class Graph {
         this.size = size;
         this.id =1 ;
         final_state = FinishState.getFinishState(size);
+        this.depth=0;
+        this.checked_nodes = new HashSet<>();
     }
 
 
@@ -43,13 +49,13 @@ public class Graph {
         return connections;
     }
 
-    public Map<Node,Set<Node>> getNodeByID(int id){
-        return connections.get(id);
+    public Node getNodeByID(int id){
+        return connections.get(id).keySet().iterator().next();
     }
     public void addNode(){
         // Creating the insider map
         Map<Node , Set<Node>> nodeMap = new HashMap<>();
-        Node node = new Node(size ,id ++);
+        Node node = new Node(size ,id ++,get_increase_depth());
         nodeMap.put(node,new HashSet<>());
         connections.put(node.getID() ,nodeMap);
         int row = node.getEmpty_point().getX();
@@ -71,8 +77,8 @@ public class Graph {
     }
     public void addEdge(int id1, int id2) {
         // Get the Node (Key) from the insider map
-        Node node1 = getNodeByID(id1).keySet().iterator().next();
-        Node node2 = getNodeByID(id2).keySet().iterator().next();
+        Node node1 = getNodeByID(id1);
+        Node node2 = getNodeByID(id2);
 
         // Checking if the connection is legal and the nodes are different before creating the edge
         boolean res = check_connection(node1, node2) && (id1 != id2);
@@ -103,7 +109,7 @@ public class Graph {
 
 
     public Set<Node> getNeighbors(int id){
-        Node node = getNodeByID(id).keySet().iterator().next();
+        Node node = getNodeByID(id);
         return connections.get(id).get(node);
     }
 
@@ -119,7 +125,7 @@ public class Graph {
 
         // Generation part
         for (int k = 0; k< nodes; k++) {
-            Node node = new Node(size, g.get_increase_Id());
+            Node node = new Node(size, g.get_increase_Id(), g.get_increase_depth());
             int[][] puzzle = new int[size][size];
             // Generating random index for the null
             Point emp_index = new Point(Math.abs(random.nextInt()) % (size), Math.abs(random.nextInt()) % (size));
@@ -137,17 +143,73 @@ public class Graph {
             }
         return g;
     }
-//Generating the moving states for a given node
+
+    public Graph generate_new_graph_from_given_graph(boolean add_neighbors) {
+        // Storing neighbors before clearing the graph
+        Set<Node> neighbors = null;
+
+        // Getting the size of the graph (vertices)
+        int size = getConnections().size();
+
+        // Generating a new starting node
+        Node startNode = null;
+        do {
+            try {
+                Random random = new Random();
+                int index = Math.abs(random.nextInt()) % size + 1;
+                startNode = getNodeByID(index);
+
+                // Storing neighbors before clearing the graph
+                if (add_neighbors) {
+                    neighbors = getNeighbors(index);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } while (startNode == null);
+
+        // Clearing the graph
+        clear_graph();
+
+        // Adding the start node
+        startNode.setID(get_increase_Id());
+        startNode.setDepth(get_increase_depth());
+        add_generated_Node(startNode);
+
+        // Setting neighbors for the new starting node
+        if (neighbors != null) {
+            setNeighbors(startNode.getID(), neighbors);
+        }
+
+        return this;
+    }
+
+
+    private void setNeighbors(int id, Set<Node> neighbors) {
+        //Getting the map inside the map...
+        Map<Node , Set<Node>> map = connections.get(id);
+
+        // updating the map
+        map.put(getNodeByID(id) , neighbors);
+    }
+
+    private int get_increase_depth() {
+        return this.depth++;
+    }
+    public void increase_depth(){
+        this.depth++;
+    }
+
+    //Generating the moving states for a given node
     public void get_states(Node node) {
         // For the clone puzzle function, to make sure that we call just when we need to
         boolean is_inside_if = false;
 
+        Node node1 = null , temp=null;
         int row = node.getEmpty_point().getX();
         int col = node.getEmpty_point().getY();
         int [][] tmp_puzzle = clonePuzzle(node.getPuzzle());
         //Checking each one
-
-//        generate_up(row , col , tmp_puzzle , )
         //Up
         int up_idx_row = row - 1;
         // If we still in bounds, start to generate
@@ -155,12 +217,17 @@ public class Graph {
             is_inside_if = true;
             // Generating the new puzzle state
             this.swapElements(tmp_puzzle,up_idx_row,col ,row,col);
-            Node up = new Node(node,get_increase_Id(),new Point(up_idx_row,col));
-            up.setPuzzle(tmp_puzzle);
+            node1 = new Node(node,get_increase_Id(),new Point(up_idx_row,col), this.depth);
+            //Checking if the Node contains already, if not, temp will be null
+            temp = getNodeIfExists(node1);
+            //updating node1 in accordance to temp
+            node1 = temp==null? node1:temp;
+
+            node1.setPuzzle(tmp_puzzle);
             //Adding the node to the graph
-            this.add_generated_Node(up);
+            this.add_generated_Node(node1);
             // Adding an edge between the nodes
-            this.addEdge(node.getID() , up.getID());
+            this.addEdge(node.getID() , node1.getID());
         }
 
         //Resetting the puzzle
@@ -174,12 +241,18 @@ public class Graph {
         if(down_idx_row<size && down_idx_row>=0){
             is_inside_if = true;
             this.swapElements(tmp_puzzle,down_idx_row,col ,row,col);
-            Node down = new Node(node,get_increase_Id(),new Point(down_idx_row,col));
-            down.setPuzzle(tmp_puzzle);
+            node1 = new Node(node,get_increase_Id(),new Point(down_idx_row,col), this.depth);
+
+            //Checking if the Node contains already, if not, temp will be null
+            temp = getNodeIfExists(node1);
+            //updating node1 in accordance to temp
+            node1 = temp==null? node1:temp;
+
+            node1.setPuzzle(tmp_puzzle);
             //Adding the node to the graph
-            this.add_generated_Node(down);
+            this.add_generated_Node(node1);
             // Adding an edge between the nodes
-            this.addEdge(node.getID() , down.getID());
+            this.addEdge(node.getID() , node1.getID());
         }
 
         //Resetting the puzzle
@@ -194,12 +267,18 @@ public class Graph {
         if (right_idx_col <size && right_idx_col>=0){
             is_inside_if = true;
             this.swapElements(tmp_puzzle,row,right_idx_col ,row,col);
-            Node right = new Node(node,get_increase_Id(),new Point(row,right_idx_col));
-            right.setPuzzle(tmp_puzzle);
+            node1 = new Node(node,get_increase_Id(),new Point(row,right_idx_col), this.depth);
+
+            //Checking if the Node contains already, if not, temp will be null
+            temp = getNodeIfExists(node1);
+            //updating node1 in accordance to temp
+            node1 = temp==null? node1:temp;
+
+            node1.setPuzzle(tmp_puzzle);
             //Adding the node to the graph
-            this.add_generated_Node(right);
+            this.add_generated_Node(node1);
             // Adding an edge between the nodes
-            this.addEdge(node.getID() , right.getID());
+            this.addEdge(node.getID() , node1.getID());
         }
 
         //Resetting the puzzle
@@ -211,16 +290,34 @@ public class Graph {
         int left_idx_col = col -1;
         if (left_idx_col <size && left_idx_col>=0 ){
             this.swapElements(tmp_puzzle,row,left_idx_col ,row,col);
-            Node left = new Node(node,get_increase_Id(),new Point(row,left_idx_col));
-            left.setPuzzle(tmp_puzzle);
-            //Adding the node to the graph
-            this.add_generated_Node(left);
-            // Adding an edge between the nodes
-            this.addEdge(node.getID() , left.getID());
-        }
+            node1 = new Node(node,get_increase_Id(),new Point(row,left_idx_col), this.depth);
 
+            //Checking if the Node contains already, if not, temp will be null
+            temp = getNodeIfExists(node1);
+            //updating node1 in accordance to temp
+            node1 = temp==null? node1:temp;
+
+            node1.setPuzzle(tmp_puzzle);
+            //Adding the node to the graph
+            this.add_generated_Node(node1);
+            // Adding an edge between the nodes
+            this.addEdge(node.getID() , node1.getID());
+        }
     }
-//Random initialization of the puzzle
+    //This method checks if new state is already inside the graph
+    private Node getNodeIfExists(Node targetNode) {
+        for (Map.Entry<Integer, Map<Node, Set<Node>>> entry : connections.entrySet()) {
+            for (Map.Entry<Node, Set<Node>> innerEntry : entry.getValue().entrySet()) {
+                if (innerEntry.getKey().equals(targetNode) || innerEntry.getValue().contains(targetNode)) {
+                    return innerEntry.getKey(); // Node found, return the matching node
+                }
+            }
+        }
+        return null; // Node not found in the graph
+    }
+
+
+    //Random initialization of the puzzle
     private void initialize_puzzle(Node node, int[][] puzzle, Set<Integer> nums) {
         int num = 0;
         // Generating the number of elements (for size 4 -> 4*4-1 =15 , for size 5 -> 5*5-1 =24 ...)
@@ -278,7 +375,7 @@ public class Graph {
             Node node = value.keySet().iterator().next();
             Set<Node> neighbors = value.get(node);
 
-            System.out.println("Node number : " + id);
+            System.out.println("Node number : " + id + " depth : " + node.getDepth());
             node.print_puzzle();
 
             if (!neighbors.isEmpty()) {
@@ -306,12 +403,10 @@ public class Graph {
 
 
     public Graph generate_n_steps_from_final_state(int n){
-        //Making a new graph
-        this.connections.clear();
-        this.id =1;
-
+        //Clearing the graph
+       clear_graph();
         //Creating the node and add to the graph
-        Node final_state_node = new Node(size , get_increase_Id(), new Point(size-1,size-1), final_state.getPuzzleArr());
+        Node final_state_node = new Node(size , get_increase_Id(), new Point(size-1,size-1), final_state.getPuzzleArr(),get_increase_depth());
         add_generated_Node(final_state_node);
 
         //Start to generate states from the final state using BFS
@@ -320,9 +415,13 @@ public class Graph {
         while (n>0){
             Node node = queue.poll();
             if(!node.isVisited()) {
+                node.setVisited(true);
                 get_states(node);
+                //Keeping the depth to update all its neighbors
+                int depth_ = get_increase_depth();
                 for(Node neighbor : getNeighbors(node.getID())){
                     if(!neighbor.isVisited())
+                        neighbor.setDepth(depth_);
                         queue.add(neighbor);
                 }
                 //We're decreasing n only when we generated new state!
@@ -333,9 +432,22 @@ public class Graph {
         return this;
     }
 
+    private void clear_graph() {
+        //Making a new graph
+        this.connections.clear();
+        this.id =1;
+        this.depth=0;
+       set_visited(false);
+    }
 
-
-
+    //Make all the nodes to be unvisited.
+    public void set_visited(boolean b) {
+        connections.forEach((id,map)->{
+            map.forEach((node,set)->{
+                node.setVisited(b);
+            });
+        });
+    }
 
 
     //This function will be called from the main and generate the graph from scratch

@@ -17,6 +17,7 @@ public class BFS {
         this.start_node = startNode;
         this.graph = graph;
         this.size = graph.getSize();
+
         this.parentMap = new HashMap<>();
         this.final_state = FinishState.getFinishState(size);
     }
@@ -25,6 +26,9 @@ public class BFS {
 
 
     public void traverse() {
+        //Clearing the visited area
+        graph.set_visited(false);
+
         Queue<Node> queue = new LinkedList<>();
         queue.add(this.start_node);
         // Limit the number of movements to 5000
@@ -78,7 +82,7 @@ public class BFS {
         // Print the path in reverse order (from start to end)
         Collections.reverse(path);
         for (Integer nodeID : path) {
-            graph.getNodeByID(nodeID).keySet().iterator().next().print_puzzle();
+            graph.getNodeByID(nodeID).print_puzzle();
         }
     }
 }

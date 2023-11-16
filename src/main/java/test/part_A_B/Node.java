@@ -2,6 +2,7 @@ package test.part_A_B;
 
 import States.RegulaerState;
 import States.State;
+import test.Part_D.Costs;
 
 import java.util.HashSet;
 import java.util.Scanner;
@@ -19,34 +20,32 @@ public class Node {
 
     private State state;
 
+    private Costs costs_for_AStar;
+    private int depth;
 
     // copy constructor
-    public Node(Node node, int increaseId , Point p) {
+
+    public Node(Node node, int increaseId , Point p, int depth) {
      this.size = node.size;
      this.puzzle = node.getPuzzle();
      this.ID = increaseId;
      this.visited = false;
      this.empty_point = p;
      this.state =new RegulaerState(size , puzzle);
-    }
-//Ctor for the final state case.
-    public Node(int size, int increaseId, Point point, int[][] finalState) {
-        this.size = size;
-        this.ID = increaseId;
-        this.empty_point = point;
-        this.puzzle = finalState;
-        this.state =new RegulaerState(size , puzzle);
+     this.depth = depth;
+
+     //This part is for A star...
+     this.costs_for_AStar = new Costs(depth, state);
     }
 
 
-
-
-    // regular Ctor
-    public Node(int size , int id) {
+// regular Ctor
+    public Node(int size , int id, int depth) {
         this.visited = false;
         this.size = size;
         this.ID =id;
         this.puzzle = new int[size][size];
+        this.depth = depth;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Generate node for you?");
         String s = scanner.nextLine();
@@ -54,19 +53,48 @@ public class Node {
             initialPuzzle();
 
     }
+
+    public int getDepth() {
+        return depth;
+    }
+
+    //Ctor for the final state case.
+
+    public Node(int size, int increaseId, Point point, int[][] finalState,int depth) {
+        this.size = size;
+        this.ID = increaseId;
+        this.empty_point = point;
+        this.puzzle = finalState;
+        this.state =new RegulaerState(size , puzzle);
+        this.depth =depth;
+    }
     public State getState() {
         return state;
     }
     public int getSize() {
         return size;
     }
-
     public void setSize(int size) {
         this.size = size;
     }
 
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
     public boolean isVisited() {
         return visited;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public Costs getCosts_for_AStar() {
+        return costs_for_AStar;
+    }
+    public void setCosts_for_AStar(Costs costs_for_AStar) {
+        this.costs_for_AStar = costs_for_AStar;
     }
 
     public void setVisited(boolean visited) {
