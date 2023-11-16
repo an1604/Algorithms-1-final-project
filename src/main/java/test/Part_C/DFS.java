@@ -62,6 +62,7 @@ public class DFS {
                 if (!visited.contains(neighbor_id)) {
                     stack.push(neighbor_id);
                     parentMap.put(neighbor_id, current_id);
+                    // Checks if another node already visits the current node
                 } else if (parentMap.get(current_id) != neighbor_id) {
                     build_cycle_edge(parentMap, current_id, neighbor_id, cycle_edges);
                     return true;

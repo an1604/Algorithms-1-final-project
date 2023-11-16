@@ -15,7 +15,6 @@ public class Graph {
     private  int id;
 
     private int depth;
-
     private Set<Node> checked_nodes; //To avoiding cycles
 
 
@@ -305,6 +304,9 @@ public class Graph {
             // Adding an edge between the nodes
             this.addEdge(node.getID() , node1.getID());
         }
+        //after we made the changes, call dfs to search for cycles and remove them
+//        DFS dfs = new DFS(this);
+//        dfs.dfs();
     }
     //This method checks if new state is already inside the graph
     private Node getNodeIfExists(Node targetNode) {
