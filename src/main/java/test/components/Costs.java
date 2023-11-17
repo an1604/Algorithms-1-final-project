@@ -1,10 +1,14 @@
-package test.Part_D;
+package test.components;
 
 import States.FinishState;
 import States.State;
-import test.part_A_B.Point;
 
 public class Costs {
+
+    /**In this class we considered a couple of things:
+ * The heuristics' functions are the Manhattan and the zero function.
+ * We use Greedy-BFS as a non-heuristic function in part 3.
+ **/
 
     private int g_n;
     private int f_n;
@@ -97,9 +101,17 @@ public class Costs {
     public boolean isCalculated() {
         return calculated;
     }
+    public void get_Greedy_BFS(){
+    /**
+     A non-heuristic function that calculates f(n) as only the h(n) --> f(n) = h(n).
+     It only considers how close a node is to the goal based on the heuristic.
+     **/
+    this.g_n=0;
+    get_Manhattan_costs();
 
+    }
     private void compute_f(){
-        //Checking if we accomplish the mission (h(n)=0) is the finish line)
+        //Checking if we accomplish the mission (h(n)=0) is the finish line) and even for Dijkstra part (compare only g(n))
         if(this.h_n==0)
             this.f_n =0;
         else
