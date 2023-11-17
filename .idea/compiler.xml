@@ -9,8 +9,5 @@
         <module name="final_project_algo1" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="final_project_algo1" target="20" />
-    </bytecodeTargetLevel>
   </component>
 </project>
