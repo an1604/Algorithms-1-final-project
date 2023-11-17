@@ -1,14 +1,12 @@
-package test.part_A_B;
+package test.components;
 
 import States.FinishState;
 import States.State;
-import test.Part_C.DFS;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Graph {
-    private Map<Integer , Map<Node , Set<Node>>> connections ;
+    private Map<Integer , Map<Node, Set<Node>>> connections ;
     private State final_state;
     private  int size;
 
@@ -497,6 +495,7 @@ public class Graph {
         start_node.remove(getNodeByID(endNode));
         end_node.remove(getNodeByID(startNode));
     }
+
 }
 
 

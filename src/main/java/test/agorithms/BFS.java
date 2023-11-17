@@ -1,18 +1,18 @@
-package test.Part_C;
+package test.agorithms;
 
 import States.FinishState;
-import test.part_A_B.Graph;
-import test.part_A_B.Node;
+import test.components.Graph;
+import test.components.Node;
 
 import java.util.*;
 
-public class BFS {
+public class BFS implements Algorithms{
     private final Node start_node;
     private final Graph graph;
     private final FinishState final_state;
     private int size;
     private Map<Integer, Integer> parentMap;  // Map to store parent-child relationship
-
+    private int num_of_vertices;
     public BFS(Node startNode, Graph graph) {
         this.start_node = startNode;
         this.graph = graph;
@@ -20,11 +20,11 @@ public class BFS {
 
         this.parentMap = new HashMap<>();
         this.final_state = FinishState.getFinishState(size);
+        this.num_of_vertices = Integer.MIN_VALUE;
     }
 
 
-
-
+    @Override
     public void traverse() {
         //Clearing the visited area
         graph.set_visited(false);
@@ -66,6 +66,18 @@ public class BFS {
         System.out.println("No solution found!");
     }
 
+    @Override
+    public int num_of_vertices() {
+        if(num_of_vertices!=Integer.MIN_VALUE)
+            return num_of_vertices;
+        return parentMap.size();
+    }
+
+    @Override
+    public String Name() {
+        return "BFS";
+    }
+
 
     private void printPath(Node current) {
         System.out.println("Solution found! Printing the path:");
@@ -78,7 +90,7 @@ public class BFS {
             path.add(parentID);
             parentID = parentMap.get(parentID);
         }
-
+        this.num_of_vertices = path.size();
         // Print the path in reverse order (from start to end)
         Collections.reverse(path);
         for (Integer nodeID : path) {

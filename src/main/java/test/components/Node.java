@@ -1,8 +1,7 @@
-package test.part_A_B;
+package test.components;
 
 import States.RegulaerState;
 import States.State;
-import test.Part_D.Costs;
 
 import java.util.HashSet;
 import java.util.Scanner;

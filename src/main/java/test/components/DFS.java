@@ -1,7 +1,4 @@
-package test.Part_C;
-
-import test.part_A_B.Graph;
-import test.part_A_B.Node;
+package test.components;
 
 import java.util.*;
 

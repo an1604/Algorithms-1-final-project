@@ -1,18 +1,26 @@
-package test.Part_D;
+package test.agorithms;
 
-import test.part_A_B.Graph;
-import test.part_A_B.Node;
+import test.components.Costs;
+import test.components.Graph;
+import test.components.Node;
 
 import java.util.*;
 
-public class AStar {
-    String prompt; // This is the prompt about the cost function (h(n))
-    private final Node start_node;
+public class AStar implements Algorithms{
 
+    /**In this class, we consider a couple of things:
+     * Initialization: We get the graph to compute the search on.
+     * We get the prompt for the heuristic function.
+     * And we get the starting node to move on from.
+     **/
+    private final String prompt; // This is the prompt about the cost function (h(n))
+    private final Node start_node;
     private final Graph graph;
+
     private Set<Integer> visited;
     private List<Node> path;
     private boolean path_found;
+    private String name; // The alg name
 
     public AStar(Node start_node, Graph graph ,String prompt) {
         this.start_node = start_node;
@@ -21,8 +29,30 @@ public class AStar {
         this.visited= new HashSet<>();
         this.path = new ArrayList<>();
         this.path_found= false;
+        this.name = check_for_name();
     }
 
+    private String check_for_name() {
+        StringBuilder sb =new StringBuilder("A star");
+        switch (prompt) {
+            case "M":
+                sb.append(" Manhattan heuristic");
+                break;
+            case "D":
+                sb.append(" Dijkstra version");
+                break;
+            //Handle the non-heuristic function here
+            default:
+                sb.append(" Greedy BFS");
+                break;
+        }
+        return sb.toString();
+    }
+
+    public String getPrompt() {
+        return prompt;
+    }
+    @Override
     public void traverse(){
         if(!visited.isEmpty())
             visited.clear();
@@ -106,7 +136,16 @@ public class AStar {
         else
             print_path();
 
-        System.out.println("The number of vertices developed : " + visited.size());
+    }
+
+    @Override
+    public int num_of_vertices() {
+        return visited.size();
+    }
+
+    @Override
+    public String Name() {
+        return name;
     }
 
     public void print_path() {
@@ -137,7 +176,8 @@ public class AStar {
             int neighbor_fn = neighbor.getCosts_for_AStar().getF_n();
 
             if (neighbor_fn == min_cost) {
-                // Handle tie-breaking based on g_n value and check if neighbor is not visited
+                // Handle tie-breaking based on g_n value and check if a neighbor is not visited
+                // And also the checking for Dijkstra, we compare g(n).
                 if (min_node == null || (neighbor.getCosts_for_AStar().getG_n() < min_node.getCosts_for_AStar().getG_n() && !visited.contains(neighbor.getID()))) {
                     // Update min_node and add it to the queue
                     min_node = neighbor;
@@ -173,16 +213,10 @@ public class AStar {
                     break;
                 //Handle the non-heuristic function here
                 default:
+                    neighbor.getCosts_for_AStar().get_Greedy_BFS();
                     break;
             }
         }
     }
 
-    public static void main(String[] args) {
-        Graph graph1 = new Graph(4);
-        graph1.generate_n_steps_from_final_state(6);
-        graph1 = graph1.generate_new_graph_from_given_graph(false);
-        AStar a_star = new AStar(graph1.getNodeByID(1),graph1,"M");
-        a_star.traverse();
-    }
 }
