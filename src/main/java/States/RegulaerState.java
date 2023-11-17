@@ -2,6 +2,7 @@ package States;
 
 public class RegulaerState extends State{
 
+
     public RegulaerState(int size, int[][] puzzleArr) {
         super(size, puzzleArr);
         setPuzzleRepresentation(initialize_state());

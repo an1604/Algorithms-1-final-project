@@ -111,8 +111,9 @@ public class Node {
 
     public void setPuzzle(int[][] puzzle) {
         this.puzzle = puzzle;
-        //After we're setting the puzzle, we initialize the state
+        //After we're setting the puzzle, we initialize the state and the costs
         this.state = new RegulaerState(size , puzzle);
+        this.costs_for_AStar.setNode_state(state);
     }
 
     public void setEmpty_point(Point empty_point) {

@@ -153,9 +153,9 @@ public class Graph {
 
         // Generating a new starting node
         Node startNode = null;
+        Random random = new Random();
         do {
             try {
-                Random random = new Random();
                 int index = Math.abs(random.nextInt()) % size + 1;
                 startNode = getNodeByID(index);
 
@@ -165,6 +165,9 @@ public class Graph {
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
+            }catch (ArithmeticException e){
+                int index = Math.abs(random.nextInt()) % size + 1;
+                startNode = getNodeByID(index);
             }
         } while (startNode == null);
 
@@ -202,6 +205,10 @@ public class Graph {
 
     //Generating the moving states for a given node
     public void get_states(Node node) {
+        //If the node already exists, we return immanently without generating the states.
+        if(getNodeIfExists(node) !=null && getNeighbors(node.getID()).size() >1)
+            return;
+
         // For the clone puzzle function, to make sure that we call just when we need to
         boolean is_inside_if = false;
 
@@ -218,11 +225,6 @@ public class Graph {
             // Generating the new puzzle state
             this.swapElements(tmp_puzzle,up_idx_row,col ,row,col);
             node1 = new Node(node,get_increase_Id(),new Point(up_idx_row,col), this.depth);
-            //Checking if the Node contains already, if not, temp will be null
-            temp = getNodeIfExists(node1);
-            //updating node1 in accordance to temp
-            node1 = temp==null? node1:temp;
-
             node1.setPuzzle(tmp_puzzle);
             //Adding the node to the graph
             this.add_generated_Node(node1);
@@ -242,12 +244,6 @@ public class Graph {
             is_inside_if = true;
             this.swapElements(tmp_puzzle,down_idx_row,col ,row,col);
             node1 = new Node(node,get_increase_Id(),new Point(down_idx_row,col), this.depth);
-
-            //Checking if the Node contains already, if not, temp will be null
-            temp = getNodeIfExists(node1);
-            //updating node1 in accordance to temp
-            node1 = temp==null? node1:temp;
-
             node1.setPuzzle(tmp_puzzle);
             //Adding the node to the graph
             this.add_generated_Node(node1);
@@ -268,13 +264,9 @@ public class Graph {
             is_inside_if = true;
             this.swapElements(tmp_puzzle,row,right_idx_col ,row,col);
             node1 = new Node(node,get_increase_Id(),new Point(row,right_idx_col), this.depth);
-
-            //Checking if the Node contains already, if not, temp will be null
-            temp = getNodeIfExists(node1);
-            //updating node1 in accordance to temp
-            node1 = temp==null? node1:temp;
-
+            //Setting the puzzle to the right puzzle
             node1.setPuzzle(tmp_puzzle);
+
             //Adding the node to the graph
             this.add_generated_Node(node1);
             // Adding an edge between the nodes
@@ -291,21 +283,12 @@ public class Graph {
         if (left_idx_col <size && left_idx_col>=0 ){
             this.swapElements(tmp_puzzle,row,left_idx_col ,row,col);
             node1 = new Node(node,get_increase_Id(),new Point(row,left_idx_col), this.depth);
-
-            //Checking if the Node contains already, if not, temp will be null
-            temp = getNodeIfExists(node1);
-            //updating node1 in accordance to temp
-            node1 = temp==null? node1:temp;
-
             node1.setPuzzle(tmp_puzzle);
             //Adding the node to the graph
             this.add_generated_Node(node1);
             // Adding an edge between the nodes
             this.addEdge(node.getID() , node1.getID());
         }
-        //after we made the changes, call dfs to search for cycles and remove them
-//        DFS dfs = new DFS(this);
-//        dfs.dfs();
     }
     //This method checks if new state is already inside the graph
     private Node getNodeIfExists(Node targetNode) {
@@ -426,7 +409,7 @@ public class Graph {
                 for(Node neighbor : getNeighbors(node.getID())){
                     if(!neighbor.isVisited())
                         neighbor.setDepth(depth_);
-                        queue.add(neighbor);
+                    queue.add(neighbor);
                 }
                 //We're decreasing n only when we generated new state!
                 n--;

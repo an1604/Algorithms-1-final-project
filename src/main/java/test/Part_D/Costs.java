@@ -11,11 +11,13 @@ public class Costs {
 
     private int h_n;
     private State node_state;
+    private boolean calculated;
 
     public Costs(int depth, State state) {
         // we can access to the depth, but need to calculate the other
-        g_n=depth;
-        node_state = state;
+        g_n=depth; // That means the distance from the initial node
+        node_state = state; // The state of the node
+        this.calculated = false;
         f_n =0;
         h_n=0;
     }
@@ -72,6 +74,7 @@ public class Costs {
             }
         }
         this.h_n = distance;
+        //After we compute h(n)' we can set f(n)
         compute_f();
     }
     //Method to find the current position of the value, to compute the Manhattan distance
@@ -91,11 +94,17 @@ public class Costs {
         this.h_n=0;
         compute_f();
     }
+
+    public boolean isCalculated() {
+        return calculated;
+    }
+
     private void compute_f(){
         //Checking if we accomplish the mission (h(n)=0) is the finish line)
         if(this.h_n==0)
             this.f_n =0;
         else
             this.f_n = this.g_n + this.h_n;
+        this.calculated = true;
     }
 }
