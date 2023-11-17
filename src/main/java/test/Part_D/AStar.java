@@ -6,14 +6,14 @@ import test.part_A_B.Node;
 import java.util.*;
 
 public class AStar {
-    String prompt; // This is the prompt about the cost function (h(n))
-    private final Node start_node;
+    private final String prompt; // This is the prompt about the cost function (h(n))
 
+    private final Node start_node;
     private final Graph graph;
+
     private Set<Integer> visited;
     private List<Node> path;
     private boolean path_found;
-
     public AStar(Node start_node, Graph graph ,String prompt) {
         this.start_node = start_node;
         this.graph = graph;
@@ -21,6 +21,10 @@ public class AStar {
         this.visited= new HashSet<>();
         this.path = new ArrayList<>();
         this.path_found= false;
+    }
+
+    public String getPrompt() {
+        return prompt;
     }
 
     public void traverse(){
@@ -137,7 +141,8 @@ public class AStar {
             int neighbor_fn = neighbor.getCosts_for_AStar().getF_n();
 
             if (neighbor_fn == min_cost) {
-                // Handle tie-breaking based on g_n value and check if neighbor is not visited
+                // Handle tie-breaking based on g_n value and check if a neighbor is not visited
+                // And also the checking for Dijkstra, we compare g(n).
                 if (min_node == null || (neighbor.getCosts_for_AStar().getG_n() < min_node.getCosts_for_AStar().getG_n() && !visited.contains(neighbor.getID()))) {
                     // Update min_node and add it to the queue
                     min_node = neighbor;
@@ -182,7 +187,7 @@ public class AStar {
         Graph graph1 = new Graph(4);
         graph1.generate_n_steps_from_final_state(6);
         graph1 = graph1.generate_new_graph_from_given_graph(false);
-        AStar a_star = new AStar(graph1.getNodeByID(1),graph1,"M");
+        AStar a_star = new AStar(graph1.getNodeByID(1),graph1,"D");
         a_star.traverse();
     }
 }

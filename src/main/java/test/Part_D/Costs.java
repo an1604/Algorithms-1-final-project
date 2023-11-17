@@ -8,7 +8,6 @@ public class Costs {
 
     private int g_n;
     private int f_n;
-
     private int h_n;
     private State node_state;
     private boolean calculated;
