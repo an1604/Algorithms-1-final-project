@@ -1,5 +1,9 @@
 package test.part_A_B;
 
+import States.RegulaerState;
+import States.State;
+import test.Part_D.Costs;
+
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -14,44 +18,34 @@ public class Node {
     private int ID;
     private Point empty_point;
 
-    private String state;
+    private State state;
+
+    private Costs costs_for_AStar;
+    private int depth;
 
     // copy constructor
-    public Node(Node node, int increaseId , Point p) {
+
+    public Node(Node node, int increaseId , Point p, int depth) {
      this.size = node.size;
      this.puzzle = node.getPuzzle();
      this.ID = increaseId;
      this.visited = false;
      this.empty_point = p;
-     this.state = initialize_state();
-    }
-//Ctor for the final state case.
-    public Node(int size, int increaseId, Point point, int[][] finalState) {
-        this.size = size;
-        this.ID = increaseId;
-        this.empty_point = point;
-        this.puzzle = finalState;
-        this.state = initialize_state();
+     this.state =new RegulaerState(size , puzzle);
+     this.depth = depth;
+
+     //This part is for A star...
+     this.costs_for_AStar = new Costs(depth, state);
     }
 
 
-    private String initialize_state() {
-        StringBuilder sb = new StringBuilder();
-        for (int[] nums : this.puzzle) {
-            for (int num : nums) {
-                sb.append(num == -1 ? "null" : String.format("%2d", num) + " ");
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
-    // regular Ctor
-    public Node(int size , int id) {
+// regular Ctor
+    public Node(int size , int id, int depth) {
         this.visited = false;
         this.size = size;
         this.ID =id;
         this.puzzle = new int[size][size];
+        this.depth = depth;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Generate node for you?");
         String s = scanner.nextLine();
@@ -59,19 +53,48 @@ public class Node {
             initialPuzzle();
 
     }
-    public String getState() {
+
+    public int getDepth() {
+        return depth;
+    }
+
+    //Ctor for the final state case.
+
+    public Node(int size, int increaseId, Point point, int[][] finalState,int depth) {
+        this.size = size;
+        this.ID = increaseId;
+        this.empty_point = point;
+        this.puzzle = finalState;
+        this.state =new RegulaerState(size , puzzle);
+        this.depth =depth;
+    }
+    public State getState() {
         return state;
     }
     public int getSize() {
         return size;
     }
-
     public void setSize(int size) {
         this.size = size;
     }
 
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
     public boolean isVisited() {
         return visited;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public Costs getCosts_for_AStar() {
+        return costs_for_AStar;
+    }
+    public void setCosts_for_AStar(Costs costs_for_AStar) {
+        this.costs_for_AStar = costs_for_AStar;
     }
 
     public void setVisited(boolean visited) {
@@ -88,8 +111,9 @@ public class Node {
 
     public void setPuzzle(int[][] puzzle) {
         this.puzzle = puzzle;
-        //After we're setting the puzzle, we initialize the state
-        this.state = initialize_state();
+        //After we're setting the puzzle, we initialize the state and the costs
+        this.state = new RegulaerState(size , puzzle);
+        this.costs_for_AStar.setNode_state(state);
     }
 
     public void setEmpty_point(Point empty_point) {
@@ -138,13 +162,13 @@ public class Node {
             }
         }
         // Initialize the new state of the puzzle
-        this.state = initialize_state();
+        this.state =new RegulaerState(size , puzzle);
         System.out.println("Done!");
         print_puzzle();
     }
 
     public void print_puzzle() {
-        System.out.println(state);
+        state.print();
     }
 
 
