@@ -50,6 +50,14 @@ public class Graph {
     public Node getNodeByID(int id){
         return connections.get(id).keySet().iterator().next();
     }
+    public Node get_random_node(){
+        Random random = new Random();
+        int index;
+        do{
+            index = Math.abs(random.nextInt()) % connections.size();
+        }while (index <=1);
+        return getNodeByID(index);
+    }
     public void addNode(){
         // Creating the insider map
         Map<Node , Set<Node>> nodeMap = new HashMap<>();

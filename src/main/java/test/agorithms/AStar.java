@@ -60,7 +60,6 @@ public class AStar implements Algorithms{
         graph.set_visited(false);
 
         Queue<Node> queue = new LinkedList<>();
-        int counter = 0 ; //Counting 5000 steps
         start_node.setVisited(true);
 
         //Initialize g(n) to 0 in the start node (we already in the initial node)
@@ -82,7 +81,7 @@ public class AStar implements Algorithms{
         start_node.print_puzzle();
 
 
-        while(counter <=5000 && !this.path_found){
+        while( !this.path_found){
             //Pooling the node from the Q and append the node to the path list
             try {
                 current_node = queue.poll();
@@ -120,9 +119,6 @@ public class AStar implements Algorithms{
 
                          //If we don't reach the goal, we added all the minimum nodes to the Q
                          queue.addAll(min_nodes);
-
-                         //Increasing the counter each iteration
-                         counter++;
 
                          //Increasing the depth for next iteration
                          graph.increase_depth();

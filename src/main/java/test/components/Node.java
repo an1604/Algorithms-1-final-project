@@ -32,7 +32,6 @@ public class Node {
      this.empty_point = p;
      this.state =new RegulaerState(size , puzzle);
      this.depth = depth;
-
      //This part is for A star...
      this.costs_for_AStar = new Costs(depth, state);
     }
@@ -50,6 +49,8 @@ public class Node {
         String s = scanner.nextLine();
         if (s.equals("no"))
             initialPuzzle();
+        else
+            this.state =new RegulaerState(size , puzzle);
 
     }
 

@@ -31,9 +31,7 @@ public class BFS implements Algorithms{
 
         Queue<Node> queue = new LinkedList<>();
         queue.add(this.start_node);
-        // Limit the number of movements to 5000
-        int steps = 0;
-        while (!queue.isEmpty() && steps<5000) {
+        while (!queue.isEmpty()) {
             try {
                 Node current = queue.poll();
                 // Avoiding cycles
@@ -56,10 +54,9 @@ public class BFS implements Algorithms{
                         }
 
                     }
-                    steps++;
                 }
             } catch (NullPointerException e){
-                System.out.println(e.getMessage() + " in step : " + steps);
+                e.printStackTrace();
             }
         }
 
