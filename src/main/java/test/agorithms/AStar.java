@@ -77,8 +77,8 @@ public class AStar implements Algorithms{
         queue.add(start_node);
         Node current_node =null;
 
-        System.out.println("Initial state is: ");
-        start_node.print_puzzle();
+//        System.out.println("Initial state is: ");
+//        start_node.print_puzzle();
 
 
         while( !this.path_found){
@@ -99,8 +99,8 @@ public class AStar implements Algorithms{
 
             //Handle the multiple checking
              if(visited.contains(current_node.getID())) {
-                 System.out.println("This node already exist, we go through this node again. ");
-                 current_node.print_puzzle();
+//                 System.out.println("This node already exist, we go through this node again. ");
+//                 current_node.print_puzzle();
              }
              else
                 path.add(current_node); // For printing the path at the end
@@ -129,8 +129,8 @@ public class AStar implements Algorithms{
         }
         if(!this.path_found)
             System.out.println("No solution found ...");
-        else
-            print_path();
+//        else
+//            print_path();
 
     }
 

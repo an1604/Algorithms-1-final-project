@@ -39,7 +39,7 @@ public class BFS implements Algorithms{
                     current.setVisited(true);
                     // If the current node matches the final state, print the path and exit
                     if (current.getState().isGoalState()) {
-                        printPath(current);
+//                        printPath(current);
                         return;
                     }
                     // We want to generate the states of the exact node and append them to the Q

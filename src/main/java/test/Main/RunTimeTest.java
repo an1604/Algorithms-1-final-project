@@ -1,30 +1,43 @@
-package test;
+package test.Main;
 
 import test.agorithms.Algorithms;
-import test.components.Point;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RunTimeTest {
-    public static void test(Algorithms ... algorithms) {
+    Algorithms[] algorithms;
+
+    public Map<Algorithms, Long> getTimes() {
+        return times;
+    }
+
+    Map<Algorithms, Long> times;
+    public RunTimeTest(Algorithms ... algorithms) {
+    this.algorithms = algorithms;
+    this.times = new HashMap<>();
+    }
+
+    public void test() {
         long startTime, endTime, runtime;
-        ArrayList<Long> times = new ArrayList<>();
         for (Algorithms alg : algorithms) {
-            System.out.println("Checking run time of :" + alg.Name() + "...");
+//            System.out.println("Checking run time of :" + alg.Name() + "...");
 
             //Using Milliseconds as parameter
              startTime = System.currentTimeMillis();
              alg.traverse();
              endTime = System.currentTimeMillis();
              runtime = endTime - startTime;
-             times.add(runtime);
+             //Added the result to the map
+             times.put(alg,runtime);
+
         }
-        System.out.println("*************** \n summary:");
+    }
+    public void print(){
         for (int i = 0; i < algorithms.length; i++) {
             System.out.println("Runtime for algorithm " + algorithms[i].Name() + " is: " + times.get(i) +" ms"+
                     " \n Num of vertices developed: " + algorithms[i].num_of_vertices() );
             System.out.println("--------------------------------");
         }
-        System.out.println("Sample Done.");
     }
 }
