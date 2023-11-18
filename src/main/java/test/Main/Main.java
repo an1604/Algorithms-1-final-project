@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Main {
-    //Thread safe data structure
+    //Thread safe data structures
     private static Set<RunTimeTest> nodes = new CopyOnWriteArraySet<>();
     private static Queue<RunTimeTest> tests = new ArrayBlockingQueue<>(200);
     private static ExecutorService es = Executors.newCachedThreadPool();
