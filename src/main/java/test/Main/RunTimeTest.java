@@ -8,10 +8,12 @@ import java.util.Map;
 public class RunTimeTest {
     Algorithms[] algorithms;
     Map<Algorithms, Long> run_times;
+    Map<Algorithms, Integer> vertices;
 
     public RunTimeTest(Algorithms ... algorithms) {
     this.algorithms = algorithms;
     this.run_times = new HashMap<>();
+    this.vertices = new HashMap<>();
     }
 
 
@@ -21,6 +23,10 @@ public class RunTimeTest {
 
     public Map<Algorithms, Long> getRun_times() {
         return run_times;
+    }
+
+    public Map<Algorithms, Integer> getVertices() {
+        return vertices;
     }
 
     public void test() {
@@ -34,6 +40,7 @@ public class RunTimeTest {
 
              //We're keeping the run time and the num of vertices in an array and then put into the map
              run_times.put(alg,runtime);
+             vertices.put(alg,alg.num_of_vertices());
         }
     }
 

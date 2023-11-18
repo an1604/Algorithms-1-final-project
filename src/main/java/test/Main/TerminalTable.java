@@ -116,6 +116,7 @@ public class TerminalTable {
     public static void main(String[] args) {
         String[] names = {"BFS", "A*"};
         TerminalTable table = new TerminalTable(names, 5);
+        table.generate_table();
         table.printTable();
     }
 }
