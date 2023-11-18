@@ -37,7 +37,12 @@ public class Node {
     }
 
 
-// regular Ctor
+    @Override
+    public String toString() {
+        return state.getPuzzleRepresentation();
+    }
+
+    // regular Ctor
     public Node(int size , int id, int depth) {
         this.visited = false;
         this.size = size;

@@ -144,6 +144,11 @@ public class AStar implements Algorithms{
         return name;
     }
 
+    @Override
+    public Node getStart_node() {
+        return start_node;
+    }
+
     public void print_path() {
         System.out.println("Solution Found!\n Path: ");
         path.forEach(node -> node.print_puzzle());

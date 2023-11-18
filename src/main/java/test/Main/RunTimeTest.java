@@ -7,37 +7,47 @@ import java.util.Map;
 
 public class RunTimeTest {
     Algorithms[] algorithms;
+    Map<Algorithms, Long> run_times;
 
-    public Map<Algorithms, Long> getTimes() {
-        return times;
-    }
-
-    Map<Algorithms, Long> times;
     public RunTimeTest(Algorithms ... algorithms) {
     this.algorithms = algorithms;
-    this.times = new HashMap<>();
+    this.run_times = new HashMap<>();
+    }
+
+
+    public Algorithms[] getAlgorithms() {
+        return algorithms;
+    }
+
+    public Map<Algorithms, Long> getRun_times() {
+        return run_times;
     }
 
     public void test() {
         long startTime, endTime, runtime;
         for (Algorithms alg : algorithms) {
-//            System.out.println("Checking run time of :" + alg.Name() + "...");
-
             //Using Milliseconds as parameter
              startTime = System.currentTimeMillis();
-             alg.traverse();
+             alg.traverse(); // running the algorithm
              endTime = System.currentTimeMillis();
-             runtime = endTime - startTime;
-             //Added the result to the map
-             times.put(alg,runtime);
+             runtime = endTime - startTime; //sample the result
 
+             //We're keeping the run time and the num of vertices in an array and then put into the map
+             run_times.put(alg,runtime);
         }
     }
-    public void print(){
-        for (int i = 0; i < algorithms.length; i++) {
-            System.out.println("Runtime for algorithm " + algorithms[i].Name() + " is: " + times.get(i) +" ms"+
-                    " \n Num of vertices developed: " + algorithms[i].num_of_vertices() );
-            System.out.println("--------------------------------");
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for(Algorithms alg : run_times.keySet()) {
+            sb.append("Alg name : " + alg.Name());
+            sb.append("\nInitial node:\n " +alg.getStart_node().toString());
+            sb.append("Params: \n  Runtime: " + run_times.get(alg) + " ms" + "\n vertices: " + alg.num_of_vertices());
+            sb.append("\n--------------------------\n ");
         }
+        return sb.toString();
     }
+
+
 }

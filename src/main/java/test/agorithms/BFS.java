@@ -8,7 +8,9 @@ import java.util.*;
 
 public class BFS implements Algorithms{
     private final Node start_node;
+
     private final Graph graph;
+
     private final FinishState final_state;
     private int size;
     private Map<Integer, Integer> parentMap;  // Map to store parent-child relationship
@@ -22,7 +24,10 @@ public class BFS implements Algorithms{
         this.final_state = FinishState.getFinishState(size);
         this.num_of_vertices = Integer.MIN_VALUE;
     }
-
+    @Override
+    public Node getStart_node() {
+        return start_node;
+    }
 
     @Override
     public void traverse() {
