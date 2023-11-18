@@ -8,7 +8,9 @@ import java.util.*;
 
 public class BFS implements Algorithms{
     private final Node start_node;
+
     private final Graph graph;
+
     private final FinishState final_state;
     private int size;
     private Map<Integer, Integer> parentMap;  // Map to store parent-child relationship
@@ -22,7 +24,10 @@ public class BFS implements Algorithms{
         this.final_state = FinishState.getFinishState(size);
         this.num_of_vertices = Integer.MIN_VALUE;
     }
-
+    @Override
+    public Node getStart_node() {
+        return start_node;
+    }
 
     @Override
     public void traverse() {
@@ -31,9 +36,7 @@ public class BFS implements Algorithms{
 
         Queue<Node> queue = new LinkedList<>();
         queue.add(this.start_node);
-        // Limit the number of movements to 5000
-        int steps = 0;
-        while (!queue.isEmpty() && steps<5000) {
+        while (!queue.isEmpty()) {
             try {
                 Node current = queue.poll();
                 // Avoiding cycles
@@ -41,7 +44,7 @@ public class BFS implements Algorithms{
                     current.setVisited(true);
                     // If the current node matches the final state, print the path and exit
                     if (current.getState().isGoalState()) {
-                        printPath(current);
+//                        printPath(current);
                         return;
                     }
                     // We want to generate the states of the exact node and append them to the Q
@@ -56,10 +59,9 @@ public class BFS implements Algorithms{
                         }
 
                     }
-                    steps++;
                 }
             } catch (NullPointerException e){
-                System.out.println(e.getMessage() + " in step : " + steps);
+                e.printStackTrace();
             }
         }
 

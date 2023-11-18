@@ -32,13 +32,17 @@ public class Node {
      this.empty_point = p;
      this.state =new RegulaerState(size , puzzle);
      this.depth = depth;
-
      //This part is for A star...
      this.costs_for_AStar = new Costs(depth, state);
     }
 
 
-// regular Ctor
+    @Override
+    public String toString() {
+        return state.getPuzzleRepresentation();
+    }
+
+    // regular Ctor
     public Node(int size , int id, int depth) {
         this.visited = false;
         this.size = size;
@@ -50,6 +54,8 @@ public class Node {
         String s = scanner.nextLine();
         if (s.equals("no"))
             initialPuzzle();
+        else
+            this.state =new RegulaerState(size , puzzle);
 
     }
 

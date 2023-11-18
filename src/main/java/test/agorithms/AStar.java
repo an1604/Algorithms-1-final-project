@@ -60,7 +60,6 @@ public class AStar implements Algorithms{
         graph.set_visited(false);
 
         Queue<Node> queue = new LinkedList<>();
-        int counter = 0 ; //Counting 5000 steps
         start_node.setVisited(true);
 
         //Initialize g(n) to 0 in the start node (we already in the initial node)
@@ -78,11 +77,11 @@ public class AStar implements Algorithms{
         queue.add(start_node);
         Node current_node =null;
 
-        System.out.println("Initial state is: ");
-        start_node.print_puzzle();
+//        System.out.println("Initial state is: ");
+//        start_node.print_puzzle();
 
 
-        while(counter <=5000 && !this.path_found){
+        while( !this.path_found){
             //Pooling the node from the Q and append the node to the path list
             try {
                 current_node = queue.poll();
@@ -100,8 +99,8 @@ public class AStar implements Algorithms{
 
             //Handle the multiple checking
              if(visited.contains(current_node.getID())) {
-                 System.out.println("This node already exist, we go through this node again. ");
-                 current_node.print_puzzle();
+//                 System.out.println("This node already exist, we go through this node again. ");
+//                 current_node.print_puzzle();
              }
              else
                 path.add(current_node); // For printing the path at the end
@@ -121,9 +120,6 @@ public class AStar implements Algorithms{
                          //If we don't reach the goal, we added all the minimum nodes to the Q
                          queue.addAll(min_nodes);
 
-                         //Increasing the counter each iteration
-                         counter++;
-
                          //Increasing the depth for next iteration
                          graph.increase_depth();
 
@@ -133,8 +129,8 @@ public class AStar implements Algorithms{
         }
         if(!this.path_found)
             System.out.println("No solution found ...");
-        else
-            print_path();
+//        else
+//            print_path();
 
     }
 
@@ -146,6 +142,11 @@ public class AStar implements Algorithms{
     @Override
     public String Name() {
         return name;
+    }
+
+    @Override
+    public Node getStart_node() {
+        return start_node;
     }
 
     public void print_path() {

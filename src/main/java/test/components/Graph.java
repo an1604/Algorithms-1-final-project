@@ -4,6 +4,7 @@ import States.FinishState;
 import States.State;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Graph {
     private Map<Integer , Map<Node, Set<Node>>> connections ;
@@ -25,7 +26,7 @@ public class Graph {
     }
 
     public Graph(int size) {
-        this.connections = new HashMap<>();
+        this.connections = new ConcurrentHashMap<>();
         this.size = size;
         this.id =1 ;
         final_state = FinishState.getFinishState(size);
@@ -48,8 +49,24 @@ public class Graph {
     }
 
     public Node getNodeByID(int id){
-        return connections.get(id).keySet().iterator().next();
+        try {
+            return connections.get(id).keySet().iterator().next();
+        }catch (NullPointerException e){
+            return null;
+        }
     }
+    public Node get_random_node(){
+        Random random = new Random();
+        int index;
+        Node node = null;
+        do {
+            index = Math.abs(random.nextInt()) % connections.size() + 1;
+            node = getNodeByID(index);
+        } while (node == null || node.getState().isGoalState());
+
+        return node;
+    }
+
     public void addNode(){
         // Creating the insider map
         Map<Node , Set<Node>> nodeMap = new HashMap<>();
@@ -387,7 +404,7 @@ public class Graph {
     }
 
 
-    public Graph generate_n_steps_from_final_state(int n){
+    public   Graph generate_n_steps_from_final_state(int n){
         //Clearing the graph
        clear_graph();
         //Creating the node and add to the graph
