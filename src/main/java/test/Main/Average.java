@@ -37,7 +37,11 @@ private int vertices_avg;
     public String toString() {
         StringBuilder sb = new StringBuilder();
             sb.append("Alg name : " + algorithm.Name());
+        sb.append("\n--------------------------\n ");
+
             sb.append("\nInitial node:\n " +algorithm.getStart_node().toString());
+        sb.append("\n--------------------------\n ");
+
             sb.append("Params: \n  Runtime Average: " + run_time_avg + " ms" + "\n Vertices Average: " + vertices_avg);
             sb.append("\n--------------------------\n ");
         return sb.toString();
