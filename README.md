@@ -12,22 +12,6 @@ In this project, we implement and compare three search algorithms for solving "P
 ### Puzzle 24
 "Puzzle 24" is a variation with a 5x5 board, and the goal is to arrange the numbers from 1 to 24 in ascending order.
 
-## Project Structure
-
-### Graph Implementation
-The project includes a custom graph implementation for representing the puzzle boards and their relationships. This implementation does not use external graph libraries.
-
-### Node Class
-The Node class represents a state of the puzzle. It includes the puzzle configuration, an identifier, and methods for puzzle manipulation.
-
-### Point Class
-The Point class represents a position on the puzzle board. It includes methods for retrieving and updating coordinates.
-
-### BFS Class
-The BFS class is implemented to perform Breadth-First Search traversal on the puzzle graph, starting from a given node.
-
-## Project Stages
-
 ### Stage A: Graph Implementation
 A custom graph is implemented to represent the puzzle boards. Each possible board configuration is a vertex, and two boards that can be reached by one move are connected as neighbors in the graph.
 
