@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e36ea065-6b42-4b95-88dc-065f797cf7f5" name="Changes" comment="Huge commit!" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1700217785" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="dev" />
+                    <option name="lastUsedInstant" value="1700217735" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="cycle_detection" />
+                    <option name="lastUsedInstant" value="1700136167" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Y9cichpHepyhrnUFdQsfeRzDNF" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="AStar" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Part_D.AStar" />
+      <module name="final_project_algo1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.Part_D.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DFS" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Part_C.DFS" />
+      <module name="final_project_algo1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.Part_C.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Graph" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.part_A_B.Graph" />
+      <module name="final_project_algo1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.part_A_B.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Main" />
+      <module name="final_project_algo1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="States.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Node" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.part_A_B.Node" />
+      <module name="final_project_algo1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.part_A_B.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Node" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Graph" />
+        <item itemvalue="Application.DFS" />
+        <item itemvalue="Application.AStar" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e36ea065-6b42-4b95-88dc-065f797cf7f5" name="Changes" comment="" />
+      <created>1699941366989</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1699941366989</updated>
+      <workItem from="1699941368874" duration="313000" />
+      <workItem from="1699941705340" duration="57032000" />
+      <workItem from="1700114574288" duration="23840000" />
+      <workItem from="1700155160087" duration="17214000" />
+    </task>
+    <task id="LOCAL‎-00001" summary="new commit">
+      <option name="closed" value="true" />
+      <created>1699960143430</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL‎-00001" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1699960143430</updated>
+    </task>
+    <task id="LOCAL‎-00002" summary="new commit">
+      <option name="closed" value="true" />
+      <created>1699960646829</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL‎-00002" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1699960646829</updated>
+    </task>
+    <task id="LOCAL‎-00003" summary="new commit">
+      <option name="closed" value="true" />
+      <created>1699961164800</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL‎-00003" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1699961164800</updated>
+    </task>
+    <task id="LOCAL‎-00004" summary="new commit">
+      <option name="closed" value="true" />
+      <created>1699961269398</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL‎-00004" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1699961269399</updated>
+    </task>
+    <task id="LOCAL‎-00005" summary="new commit">
+      <option name="closed" value="true" />
+      <created>1699979038556</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL‎-00005" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1699979038557</updated>
+    </task>
+    <task id="LOCAL‎-00006" summary="new commit">
+      <option name="closed" value="true" />
+      <created>1699983767051</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL‎-00006" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1699983767052</updated>
+    </task>
+    <task id="LOCAL‎-00007" summary="new commit">
+      <option name="closed" value="true" />
+      <created>1700034188600</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL‎-00007" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700034188600</updated>
+    </task>
+    <task id="LOCAL‎-00008" summary="Adding the initial_state in Node class">
+      <option name="closed" value="true" />
+      <created>1700034564581</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL‎-00008" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700034564581</updated>
+    </task>
+    <task id="LOCAL‎-00009" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700040540138</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL‎-00009" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700040540138</updated>
+    </task>
+    <task id="LOCAL‎-00010" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700042611207</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL‎-00010" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700042611207</updated>
+    </task>
+    <task id="LOCAL‎-00011" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700044410409</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL‎-00011" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700044410409</updated>
+    </task>
+    <task id="LOCAL‎-00012" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700048123216</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL‎-00012" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700048123216</updated>
+    </task>
+    <task id="LOCAL‎-00013" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700056076055</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL‎-00013" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700056076055</updated>
+    </task>
+    <task id="LOCAL‎-00014" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700132192284</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL‎-00014" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700132192284</updated>
+    </task>
+    <task id="LOCAL‎-00015" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700136207194</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL‎-00015" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700136207195</updated>
+    </task>
+    <task id="LOCAL‎-00016" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700137156436</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL‎-00016" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700137156436</updated>
+    </task>
+    <task id="LOCAL‎-00017" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700160163558</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL‎-00017" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700160163558</updated>
+    </task>
+    <task id="LOCAL‎-00018" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700160975307</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL‎-00018" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700160975307</updated>
+    </task>
+    <task id="LOCAL‎-00019" summary="Huge commit!">
+      <option name="closed" value="true" />
+      <created>1700217683968</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL‎-00019" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700217683968</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="new commit" />
+    <MESSAGE value="Adding the initial_state in Node class" />
+    <MESSAGE value="Huge commit!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Huge commit!" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/test/Part_D/AStar.java</url>
+          <line>119</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="test.part_A_B.Graph" memberName="connections" />
+        <PinnedItemInfo parentTag="java.util.HashMap$Node" memberName="value" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+</project>
