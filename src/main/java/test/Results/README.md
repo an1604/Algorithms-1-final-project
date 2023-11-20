@@ -27,10 +27,10 @@ The Test class extends the abstract Tests class and holds key methods for runnin
 The Tests class is an abstract class that holds key methods for running tests and collecting results.
 
 ### Methods
-`clear()`: Clears the test data.
-`run_tests(int graph_size, int num_of_samples, int n)`: Runs tests for a specified graph size, number of samples, and number of steps from the final state (to be implemented by subclasses).
-`get_avg_and_visualize_results()`: Computes and visualizes the average results (to be implemented by subclasses).
-`print_results()`: Prints the results (to be implemented by subclasses).
-`visualize_results()`: Visualizes the results (to be implemented by subclasses).
-`get_samples_table()`: Gets 5 samples and visualizes the results (to be implemented by subclasses).
+1) `clear()`: Clears the test data.
+2) `run_tests(int graph_size, int num_of_samples, int n)`: Runs tests for a specified graph size, number of samples, and number of steps from the final state (to be implemented by subclasses).
+3) `get_avg_and_visualize_results()`: Computes and visualizes the average results (to be implemented by subclasses).
+4) `print_results()`: Prints the results (to be implemented by subclasses).
+5) `visualize_results()`: Visualizes the results (to be implemented by subclasses).
+6) `get_samples_table()`: Gets 5 samples and visualizes the results (to be implemented by subclasses).
 
