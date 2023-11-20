@@ -6,6 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AverageTerminalTable implements Table {
+    /**The AverageTerminalTable class.
+     * This class creates and prints a specific table for the average task:
+     * In this task we need to sample 50 different graphs (puzzle representations) in size 15 and 24 each,
+     * and generate a table to show the average run time and developed vertices.
+     **/
     private String[] headers;
     private StringBuilder data;
 
@@ -174,10 +179,6 @@ public class AverageTerminalTable implements Table {
         rows =filter_rows_new;
         //Generating the data string
         generate_data();
-    }
-    @Override
-    public String getData() {
-        return data.toString();
     }
 
     private void generate_data() {

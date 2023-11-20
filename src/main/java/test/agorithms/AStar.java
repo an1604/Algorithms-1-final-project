@@ -21,8 +21,9 @@ public class AStar implements Algorithms{
     private List<Node> path;
     private boolean path_found;
     private String name; // The alg name
+    private boolean single_run;
 
-    public AStar(Node start_node, Graph graph ,String prompt) {
+    public AStar(Node start_node, Graph graph ,String prompt, boolean single_run) {
         this.start_node = start_node;
         this.graph = graph;
         this.prompt = prompt;
@@ -30,6 +31,7 @@ public class AStar implements Algorithms{
         this.path = new ArrayList<>();
         this.path_found= false;
         this.name = check_for_name();
+        this.single_run = single_run;
     }
 
     private String check_for_name() {
@@ -54,6 +56,8 @@ public class AStar implements Algorithms{
     }
     @Override
     public void traverse(){
+        if(single_run)
+            System.out.println(this.name + " is running...");
         if(!visited.isEmpty())
             visited.clear();
 
@@ -76,9 +80,10 @@ public class AStar implements Algorithms{
         get_cost(start_node);
         queue.add(start_node);
         Node current_node =null;
-
-//        System.out.println("Initial state is: ");
-//        start_node.print_puzzle();
+        if (single_run) {
+            System.out.println("Initial state is: ");
+            start_node.print_puzzle();
+        }
 
 
         while( !this.path_found){
@@ -98,9 +103,9 @@ public class AStar implements Algorithms{
             }
 
             //Handle the multiple checking
-             if(visited.contains(current_node.getID())) {
-//                 System.out.println("This node already exist, we go through this node again. ");
-//                 current_node.print_puzzle();
+             if(visited.contains(current_node.getID()) && single_run) {
+                 System.out.println("This node already exist, we go through this node again. ");
+                 current_node.print_puzzle();
              }
              else
                 path.add(current_node); // For printing the path at the end
@@ -129,8 +134,8 @@ public class AStar implements Algorithms{
         }
         if(!this.path_found)
             System.out.println("No solution found ...");
-//        else
-//            print_path();
+        else if(single_run)
+            print_path();
 
     }
 

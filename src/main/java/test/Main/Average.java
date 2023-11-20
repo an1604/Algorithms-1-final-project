@@ -3,6 +3,14 @@ package test.Main;
 import test.agorithms.Algorithms;
 
 public class Average {
+    /**The Average class.
+     * This class holds the average values for each sample; for each algorithm we create an
+      instance of the average class to keep the values.
+     We considered a couple of things:
+     algorithm (Algorithms) - The algorithm instance.
+     run_time_avg (long) - The run time value for this specific algorithm.
+     vertices_avg (int) - The amount of developed vertices value for this specific algorithm.
+     **/
 private Algorithms algorithm;
 private long run_time_avg;
 private int vertices_avg;

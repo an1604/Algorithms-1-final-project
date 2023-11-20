@@ -17,7 +17,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Test extends Tests{
-    //Thread safe data structure
+    /**The test class.
+     * We considered a couple of things:
+     * nodes (set) - The set of initialization nodes that can be sent to sample each iteration.
+     * tests(Q) - The thread safe Q to run each test safely.
+     *graphs_idx (AtomicInteger) - The counter of the samples. */
+
     private  Set<Node> nodes;
     private  Queue<RunTimeTest> tests;
 
@@ -31,7 +36,8 @@ public class Test extends Tests{
     }
 
     public boolean step(int n, int graph_size) {
-        /**This Function represents 1 step in the test of the project,
+        /**
+         * This Function represents 1 step in the test of the project,
          We're generating 1 random graph from the final state, and then running the algorithm from
          there and sample the run time foreach one.
          Args:
@@ -55,10 +61,10 @@ public class Test extends Tests{
             nodes.add(rand_node);
 
             //Initialize the algorithms
-            BFS bfs = new BFS(rand_node, graph);
-            AStar manhattan = new AStar(rand_node, graph, "M");
-            AStar dijkstra = new AStar(rand_node, graph, "D");
-            AStar greedy_bfs = new AStar(rand_node, graph, " ");
+            BFS bfs = new BFS(rand_node, graph,false);
+            AStar manhattan = new AStar(rand_node, graph, "M", false);
+            AStar dijkstra = new AStar(rand_node, graph, "D",false);
+            AStar greedy_bfs = new AStar(rand_node, graph, " ",false);
             //Sample the run time foreach
             RunTimeTest runTimeTest = new RunTimeTest(manhattan, dijkstra, bfs, greedy_bfs);
             runTimeTest.test();
@@ -211,15 +217,6 @@ public class Test extends Tests{
     public void get_samples_table(){
         Table sample_table = new SampleTerminalTable(tests.stream().toList());
         sample_table.printTable();
-    }
-
-
-    public static void main(String[] args) {
-        Test test = new Test();
-        for (int i = 0; i <4 ; i++) {
-            test.run_tests(4,50,5000);
-        }
-        test.get_avg_and_visualize_results();
     }
 
 

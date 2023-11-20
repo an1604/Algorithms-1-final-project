@@ -13,6 +13,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Tests {
+    /**The Tests class, an abstract class.
+     * This class holds some key methods that every test needs to have.
+     **/
     private Set<RunTimeTest> nodes;
     private Queue<RunTimeTest> tests;
 
@@ -58,10 +61,10 @@ public abstract class Tests {
             while(nodes.contains(rand_node) && rand_node==null);
 
             //Initialize the algorithms
-            BFS bfs = new BFS(rand_node, graph);
-            AStar manhattan = new AStar(rand_node, graph, "M");
-            AStar dijkstra = new AStar(rand_node, graph, "D");
-            AStar greedy_bfs = new AStar(rand_node, graph, " ");
+            BFS bfs = new BFS(rand_node, graph, false);
+            AStar manhattan = new AStar(rand_node, graph, "M", false);
+            AStar dijkstra = new AStar(rand_node, graph, "D", false);
+            AStar greedy_bfs = new AStar(rand_node, graph, " ", false);
             //Sample the run time foreach
             RunTimeTest runTimeTest = new RunTimeTest(manhattan, dijkstra, bfs, greedy_bfs);
             runTimeTest.test();

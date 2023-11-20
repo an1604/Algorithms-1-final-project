@@ -1,12 +1,25 @@
 package test.components;
 
-import States.FinishState;
-import States.State;
+import test.States.FinishState;
+import test.States.State;
+import test.agorithms.AStar;
+import test.agorithms.Algorithms;
+import test.agorithms.BFS;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Graph {
+
+    /**The Graph class.
+     * In this class, we consider a couple of things:
+     * connections (Map<Integer , Map<Node, Set<Node>>>) - The map between all nodes and there connections (edges),
+         The graph is undirected.
+     * final_state (State) - The final state of the graph (in this case, the final puzzle representation).
+     * id (int) - Every vertex has unique id.
+     * depth (int) - The depth of each node was generated from the initial node.
+     * */
+
     private Map<Integer , Map<Node, Set<Node>>> connections ;
     private State final_state;
     private  int size;
@@ -35,10 +48,6 @@ public class Graph {
 
 
 
-
-    public State getFinal_state() {
-        return final_state;
-    }
 
     public int getSize() {
         return size;
@@ -349,9 +358,11 @@ public class Graph {
 
     // Helper method to swap elements in a puzzle
     private void swapElements(int[][] puzzle, int row1, int col1, int row2, int col2) {
-        int temp = puzzle[row1][col1];
-        puzzle[row1][col1] = puzzle[row2][col2];
-        puzzle[row2][col2] = temp;
+        try {
+            int temp = puzzle[row1][col1];
+            puzzle[row1][col1] = puzzle[row2][col2];
+            puzzle[row2][col2] = temp;
+        }catch (ArrayIndexOutOfBoundsException e){}
     }
 
 
@@ -453,16 +464,21 @@ public class Graph {
 
 
     //This function will be called from the main and generate the graph from scratch
-    public static Graph menu() {
+    public static void menu() {
+        System.out.println("Welcome to the graph menu!");
         boolean stop = false;
         Scanner scanner = new Scanner(System.in);
-        System.out.println("What is the size of the puzzle?");
+        System.out.println("What is the size of the puzzle? \n" +
+                "Choose 4 for 4X4 or 5 for 5X5.");
         int size = scanner.nextInt();
         String choice ="";
         Graph graph = new Graph(size);
         System.out.println("Lets build the graph...");
         while(!stop){
-            System.out.println("Enter your choice : \n 1) Create new node\n 2) Create new edge \n 3)Remove node \n 4) Print the graph \n 5) Generate random graph\n  6) Generate n steps from the final state \n7)Exit");
+            scanner = new Scanner(System.in);
+            System.out.println("Enter your choice : \n 1) Create new node\n 2) Create new edge \n 3)Remove node \n 4) Print the graph \n" +
+                    " 5) Generate random graph\n  6) Generate n steps from the final state \n" +
+                    "7) Make a single BFS traverse example \n 8) Make a single A star traverse example \n 9)Exit");
             choice = scanner.nextLine();
             switch (choice){
                 case "1":
@@ -492,6 +508,19 @@ public class Graph {
                     graph = graph.generate_n_steps_from_final_state(n);
                     break;
                 case "7":
+                    Algorithms bfs= new BFS(graph.get_random_node(),graph,true);
+                    bfs.traverse();
+                    break;
+                case "8":
+                    Scanner prompt = new Scanner(System.in);
+                    System.out.println("Choose the heuristic function:" +
+                            "'M' - The Manhattan distance." +
+                            "'D' - For Dijkstra." +
+                            "'GBFS' - For Greedy BFS.  ");
+                    Algorithms a_star = new AStar(graph.get_random_node() , graph,prompt.nextLine(),true);
+                    a_star.traverse();
+                    break;
+                case "9":
                     System.out.println("Exiting...");
                     stop =true;
                     break;
@@ -500,7 +529,6 @@ public class Graph {
                     break;
             }
         }
-        return graph;
     }
     //Disconnect the edge between given  2 nodes.
     public void remove_edge(int startNode, int endNode) {

@@ -3,6 +3,12 @@ package test.Multi_Thread;
 import test.Results.Tests;
 
 public class Task implements Runnable{
+    /**The Task class,
+     * This class represent the runnable that we sent to the ExecuterService object.
+     * We considered a couple of things:
+     * test (Tests) - The test object to sample the algorithms on.
+     * We @Override the run from Runnable.
+     **/
     private  int puzzle_size;
     private int sample_size;
     private int n;

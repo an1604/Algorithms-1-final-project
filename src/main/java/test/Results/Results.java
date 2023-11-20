@@ -1,12 +1,16 @@
 package test.Results;
 
 public class Results {
+
+    /**The Results class.
+     * This class represents a single cell in the table, for a specific algorithm.
+     * data (String) - a String representation of the run time and the developed vertices for a specific sample.
+     **/
     String data;
-    private String initial_node;
+
 
     public Results( String data ) {
         this.data = data;
-        this.initial_node = initial_node;
     }
 
     public String getData() {
@@ -15,13 +19,5 @@ public class Results {
 
     public void setData(String data) {
         this.data = data;
-    }
-
-    public String getInitial_node() {
-        return initial_node;
-    }
-
-    public void setInitial_node(String initial_node) {
-        this.initial_node = initial_node;
     }
 }

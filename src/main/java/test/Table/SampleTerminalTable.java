@@ -2,11 +2,7 @@ package test.Table;
 
 import test.Main.RunTimeTest;
 import test.Results.Results;
-import test.agorithms.AStar;
 import test.agorithms.Algorithms;
-import test.agorithms.BFS;
-import test.components.Graph;
-import test.components.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +12,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SampleTerminalTable implements Table {
+    /**The SampleTerminalTable class.
+     * This class creates and prints a specific table for the sample task:
+     * We created a sample up to 10 puzzles, in each sample we need to sample the results and show them in the table.
+     **/
 
     private List<String> headers;
     private List<String[]> rows;
@@ -180,28 +180,4 @@ public class SampleTerminalTable implements Table {
         }
     }
 
-    @Override
-    public String getData() {
-        // Implement if needed
-        return null;
-    }
-
-    public static void main(String[] args) {
-        Graph graph = new Graph(4);
-        List<RunTimeTest> tests = new ArrayList<>();
-        graph = graph.generate_n_steps_from_final_state(500);
-
-        Node initial = graph.get_random_node();
-        Algorithms a1 = new BFS(initial, graph);
-        Algorithms a2 = new AStar(initial, graph, "M");
-        Algorithms a3 = new AStar(initial, graph, "D");
-        Algorithms a4 = new AStar(initial, graph, "");
-        RunTimeTest runTimeTest = new RunTimeTest(a1, a2, a3, a4);
-        runTimeTest.test();
-        tests.add(runTimeTest);
-        System.out.println(runTimeTest.toString());
-
-        Table sampleTable = new SampleTerminalTable(tests);
-        sampleTable.printTable();
-    }
 }

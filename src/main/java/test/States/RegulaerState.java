@@ -1,4 +1,4 @@
-package States;
+package test.States;
 
 public class RegulaerState extends State{
 
