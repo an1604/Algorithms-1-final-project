@@ -1,143 +1,129 @@
 package test.Main;
 
-import test.agorithms.AStar;
-import test.agorithms.BFS;
+import test.Multi_Thread.Task;
+import test.Results.Test;
+import test.Results.Tests;
 import test.components.Graph;
-import test.components.Node;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
-    //Thread safe data structures
-    private static Set<RunTimeTest> nodes = new CopyOnWriteArraySet<>();
-    private static Queue<RunTimeTest> tests = new ArrayBlockingQueue<>(200);
-    private static ExecutorService es = Executors.newCachedThreadPool();
-    private static AtomicInteger graphs_idx = new AtomicInteger(0);
-
-    private   boolean step(int n, int graph_size) {
-        /**This Function represents 1 step in the test of the project,
-         We're generating 1 random graph from the final state, and then running the algorithm from
-         there and sample the run time foreach one.
-         Args:
-         int n - The number of steps to generate from the final state.
-         Graph - The graph that we want to run the sample on (will usually be empty to save resources).
-         The function will return true of all the steps inside go right.
-         **/
-        try {
-            boolean stop = false;
-            //Clearing the graph and then generate him
-            Graph graph = new Graph(graph_size);
-
-            graph = graph.generate_n_steps_from_final_state(n);
-
-            //Making sure we're getting a unique node each iteration
-            Node rand_node = null;
-            do {
-                 rand_node = graph.get_random_node();
-            }
-            while(nodes.contains(rand_node) && rand_node==null);
-
-            //Initialize the algorithms
-            BFS bfs = new BFS(rand_node, graph);
-            AStar manhattan = new AStar(rand_node, graph, "M");
-            AStar dijkstra = new AStar(rand_node, graph, "D");
-            AStar greedy_bfs = new AStar(rand_node, graph, " ");
-            //Sample the run time foreach
-            RunTimeTest runTimeTest = new RunTimeTest(manhattan, dijkstra, bfs, greedy_bfs);
-            runTimeTest.test();
-            tests.add(runTimeTest);
-        } catch (NullPointerException e) {
-            return false;
-        }
-        return true;
-    }
-
-    private void run_tests(int graph_size,int num_of_samples , int n) {
-        boolean res = false;
-        do {
-            try {
-                 res = step(n, graph_size);
-            } catch (NullPointerException e) {}
-        }while(!res);
-        System.out.println("Graph number " + (graphs_idx.getAndIncrement() + 1) + " successfully created. ");
-    }
-
-    public void start(int graph_size , int num_of_samples , int n ){
-        System.out.println("Generating " + num_of_samples + " random graphs using 5000 steps from the final state, in size "
-                + graph_size + "X" + graph_size + "...");
-        AtomicInteger index = new AtomicInteger(0);
-        while (index.getAndIncrement() <num_of_samples){
-            es.execute(()->run_tests(graph_size,num_of_samples,n));
-        }
-    }
-
-    public static void print_results(){
-        Scanner scanner = new Scanner(System.in);
-        boolean stop = false;
-        String choice = " ";
-        List<RunTimeTest> tests_elements = new ArrayList<>(tests);
-        while (!stop){
-            System.out.println("Choose your option : ");
-            System.out.println("(1) Show results by sample id (Note: in this case, the id's is between 1-"+tests_elements.size()+"." );
-            System.out.println("(2) Exit.");
-            choice = scanner.nextLine();
-            switch (choice){
-                case "1":
-                    int id=0;
-                    System.out.println("Generate an id for you?");
-                    choice= scanner.nextLine();
-                    if(choice.equals("yes") || choice.equals("Yes")){
-                        Random r = new Random();
-                        id = Math.abs(r.nextInt())%tests_elements.size();
-                        System.out.println("ID is : " + id);
-                    }
-                    else{
-                        System.out.println("Choose your id: ");
-                        id = scanner.nextInt();
-                    }
-                    System.out.println("Result: ");
-                    System.out.println(tests_elements.get(id).toString());
-                    break;
-                case "2":
-                    stop = true;
-                    break;
-                default:
-                    System.out.println("Try again");
-                    break;
-            }
-        }
-
-    }
-
-    private static RunTimeTest[] get_arr() {
-        RunTimeTest[] arr = new RunTimeTest[tests.size()];
-        for(int i=0;i<tests.size();i++){
-            arr[i] = tests.poll();
-        }
-        return arr ;
-    }
 
     public static void main(String[] args) {
-        Main main = new Main();
-        main.start(5,50,5000);
+        // We run the heavy tasks on multi-thread to save time
+        ExecutorService es =  Executors.newFixedThreadPool(3);
 
-        es.shutdown();
+        boolean stop = false;
+        boolean is_executed = true;
+        Tests general_test=null;
+        while (!stop) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Choose your choice : ");
+            System.out.println("(1) Create a big sample (up to 50) and visualize the averages between the results");
+            System.out.println("(2) Create a little sample and visualize the results.");
+            System.out.println("(3) Getting information about a sample via id.");
+            System.out.println("(4) See the Graph implementation menu.");
+            System.out.println("(5) Exit.");
 
-        try {
-            // Wait for all tasks to complete or until timeout
-            if (es.awaitTermination(10, TimeUnit.MINUTES)) {
-                System.out.println("Generation Done.");
-                print_results();
-            } else {
-                System.out.println("Timeout occurred while waiting for tasks to complete.");
+           String choice = scanner.nextLine();
+            int puzzle_size=0,sample_size=0,n=0;
+            Tests test = null;
+            if(choice.equals("2") || choice.equals("1")) {
+               //Getting information from the user
+               System.out.println("What is the size of the puzzle? ");
+                puzzle_size = scanner.nextInt();
+               System.out.println("What is the size of the sample? ");
+                sample_size = scanner.nextInt();
+               System.out.println("How many steps from the final state?");
+                n = scanner.nextInt();
+                System.out.println("Generating " + sample_size + " random graphs using 5000 steps from the final state, in size "
+                        + (puzzle_size == 15 ? 4 : 5) + "X" + (puzzle_size == 15 ? 4 : 5) + "...");
+                 test = new Test();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+
+            // Check his choice
+            switch (choice) {
+                case "1":
+                    if(es.isTerminated() || es.isShutdown()){
+                        es = Executors.newFixedThreadPool(3);
+                    }
+                    if ((puzzle_size == 15 || puzzle_size == 24)) {
+                        if (puzzle_size == 15)
+                            puzzle_size = 4;
+                        else
+                            puzzle_size = 5;
+                        Task task = new Task(test , puzzle_size,sample_size,n);
+                        for (int i = 0; i < sample_size; i++) {
+                            es.execute(task);
+                        }
+                        es.shutdown();
+                    }
+                    break;
+                case "2":
+                    if(es.isTerminated() || es.isShutdown()){
+                        es = Executors.newFixedThreadPool(3);
+                    }
+
+                    if (puzzle_size == 15 || puzzle_size == 24 && (sample_size <= 10)) {
+                        if (puzzle_size == 15)
+                            puzzle_size = 4;
+                        else
+                            puzzle_size = 5;
+
+                        Task task = new Task(test , puzzle_size,sample_size,n);
+                        if(es.isTerminated() || es.isShutdown()){
+                            es = Executors.newFixedThreadPool(3);
+                        }
+                        for (int i = 0; i < sample_size; i++) {
+                            es.execute(task);
+                        }
+
+                        es.shutdown();
+                    }
+                    else{
+                        System.out.println("The sample is big, tru again");
+                        is_executed = false;
+                    }
+                    break;
+                case "3":
+                  general_test.print_results();
+                  is_executed = false;
+                  break;
+                case "4":
+                    Graph.menu();
+                    is_executed = false;
+                    break;
+                case "5":
+                    stop = true;
+                    is_executed = false;
+                    break;
+                default:
+                    System.out.println("I don't understand, try again.");
+                    is_executed = false;
+                    break;
+            }
+            if(is_executed) {
+                try {
+                    es.awaitTermination(5, TimeUnit.MINUTES);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else
+                is_executed = true;
+            if(choice.equals("1")){
+                test.get_samples_table();
+            } else if (choice.equals("2")) {
+                test.get_avg_and_visualize_results();
+            }
+
+            if(test!=null)
+                general_test=test;
         }
-
-
+        System.out.println("Done");
     }
 }

@@ -1,6 +1,12 @@
-package States;
+package test.States;
 
 public abstract class State {
+    /**The State class, an abstract class.
+     * This class represents the current state of the node compared to the final node.
+     * We considered a couple of things:
+     * puzzleArr (init[][]) - The puzzle representation.
+     *puzzleRepresentation (String) - The string representation.
+     * size (int) - The size of the puzzle. */
     protected int[][] puzzleArr;
 
     public abstract void setPuzzleRepresentation(String puzzleRepresentation);
@@ -13,8 +19,8 @@ public abstract class State {
         this.size = size;
         this.puzzleArr = puzzleArr;
     }
-//Checking if the state is the final state (if its regular state)
-    public abstract boolean isGoalState();
+
+    public abstract boolean isGoalState(); //Checking if the state is the final state (if its regular state)
 
     public int[][] getPuzzleArr() {
         return puzzleArr;

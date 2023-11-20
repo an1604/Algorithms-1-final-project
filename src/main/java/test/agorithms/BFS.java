@@ -1,27 +1,32 @@
 package test.agorithms;
 
-import States.FinishState;
 import test.components.Graph;
 import test.components.Node;
 
 import java.util.*;
 
 public class BFS implements Algorithms{
+    /**The BFS class.
+     * This class represents the breadth-first search algorithm.
+     * We considered a couple of things:
+     * start_node (Node) - The initial node to move on from.
+     * graph (Graph) - The Graph that we searched on.
+     * parentMap (Map<Integer, Integer>) -  Map to store parent-child relationship.
+     * num_of_vertices (int) - Number of developed vertices.
+     * */
     private final Node start_node;
+    private boolean single_run;
 
     private final Graph graph;
 
-    private final FinishState final_state;
-    private int size;
-    private Map<Integer, Integer> parentMap;  // Map to store parent-child relationship
+    private Map<Integer, Integer> parentMap;
     private int num_of_vertices;
-    public BFS(Node startNode, Graph graph) {
+    public BFS(Node startNode, Graph graph, boolean single_run) {
+        this.single_run = single_run;
         this.start_node = startNode;
         this.graph = graph;
-        this.size = graph.getSize();
 
         this.parentMap = new HashMap<>();
-        this.final_state = FinishState.getFinishState(size);
         this.num_of_vertices = Integer.MIN_VALUE;
     }
     @Override
@@ -31,6 +36,8 @@ public class BFS implements Algorithms{
 
     @Override
     public void traverse() {
+        if(single_run)
+            System.out.println("BFS is running...");
         //Clearing the visited area
         graph.set_visited(false);
 
@@ -44,7 +51,8 @@ public class BFS implements Algorithms{
                     current.setVisited(true);
                     // If the current node matches the final state, print the path and exit
                     if (current.getState().isGoalState()) {
-//                        printPath(current);
+                        if(single_run)
+                            printPath(current);
                         return;
                     }
                     // We want to generate the states of the exact node and append them to the Q
@@ -99,4 +107,5 @@ public class BFS implements Algorithms{
             graph.getNodeByID(nodeID).print_puzzle();
         }
     }
+
 }

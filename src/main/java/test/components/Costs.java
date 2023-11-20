@@ -1,7 +1,7 @@
 package test.components;
 
-import States.FinishState;
-import States.State;
+import test.States.FinishState;
+import test.States.State;
 
 public class Costs {
 

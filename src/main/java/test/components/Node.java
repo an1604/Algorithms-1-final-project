@@ -1,13 +1,24 @@
 package test.components;
 
-import States.RegulaerState;
-import States.State;
+import test.States.RegulaerState;
+import test.States.State;
 
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
 public class Node {
+    /**The Node class, This class represent a single node in the graph.
+     * We considered a couple of things:
+     * size (int) - The size of the node (in this case, the size of the puzzle).
+     * puzzle (int[][]) - The puzzle elements.
+     * visited (bool) - A boolean value that checks if the node has been visited in the traverse.
+     * ID(int) - This id integrate with the graph's id.
+     * state (State) - Element that represents the puzzle state compared to the final state puzzle.
+     * costs_for_AStar (Costs) -Element that represents the costs of A star functions (f(n),g(n),h(n)).
+     * depth (int) - The depth from the start node.
+     * empty_point (Point) - Element that represents the coordinates of the empty block in the puzzle.
+     **/
     private int size;
 
     private int [][] puzzle;
@@ -128,7 +139,7 @@ public class Node {
     public Point getEmpty_point() {
         return empty_point;
     }
-
+    //Function that gives you a chance to build your own node.
     private void initialPuzzle(){
         Scanner scanner = new Scanner(System.in);
         Set<Integer> numSet = new HashSet();
