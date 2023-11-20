@@ -2,7 +2,9 @@ package test.Results;
 
 import test.Main.Average;
 import test.Main.RunTimeTest;
-import test.Main.TerminalTable;
+import test.Table.AverageTerminalTable;
+import test.Table.SampleTerminalTable;
+import test.Table.Table;
 import test.agorithms.AStar;
 import test.agorithms.Algorithms;
 import test.agorithms.BFS;
@@ -14,13 +16,13 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-public class Test implements Tests{
+public class Test extends Tests{
     //Thread safe data structure
-    private  Set<RunTimeTest> nodes;
+    private  Set<Node> nodes;
     private  Queue<RunTimeTest> tests;
 
     private  AtomicInteger graphs_idx;
-    private TerminalTable table;
+    private Table table;
 
     public Test() {
         this.nodes = new CopyOnWriteArraySet<>();
@@ -50,6 +52,7 @@ public class Test implements Tests{
                  rand_node = graph.get_random_node();
             }
             while(nodes.contains(rand_node) && rand_node==null);
+            nodes.add(rand_node);
 
             //Initialize the algorithms
             BFS bfs = new BFS(rand_node, graph);
@@ -76,14 +79,9 @@ public class Test implements Tests{
         System.out.println("Graph number " + (graphs_idx.getAndIncrement() + 1) + " successfully created. ");
     }
 
-    public void start(int graph_size , int num_of_samples , int n){
-        //Clearing the test instance
-        clear();
-        System.out.println("Generating " + num_of_samples + " random graphs using 5000 steps from the final state, in size "
-                + graph_size + "X" + graph_size + "...");
-    }
 
-    private void clear() {
+
+    public void clear() {
         this.table=null;
         this.tests = new ArrayBlockingQueue<>(200);
         this.graphs_idx.set(0);
@@ -130,22 +128,34 @@ public class Test implements Tests{
 
 
     @Override
+    public String toString() {
+        return "Test{" +
+                "nodes=" + nodes +
+                ", tests=" + tests +
+                ", graphs_idx=" + graphs_idx +
+                ", table=" + table +
+                '}';
+    }
+
+    @Override
     public void get_avg_and_visualize_results() {
         Algorithms[] algorithms =get_algorithms();
-        Map<Algorithms, Average> map = new HashMap<>();
+        Map<String, Average> map = new HashMap<>();
         //Getting all the Algorithms and map them with average instance
         for(Algorithms algorithm : algorithms){
-            map.put(algorithm , new Average(algorithm));
+            map.put(algorithm.Name() , new Average(algorithm));
         }
 
         //Commute the averages
         for (RunTimeTest test : tests){
             for(Algorithms algorithm : test.getAlgorithms()){
-                //Run time
-                map.get(algorithm).setRun_time_avg(test.getRun_times().get(algorithm));
-                //Average
-                map.get(algorithm).setVertices_avg(test.getVertices().get(algorithm));
-
+                try {
+                    Average a = map.get(algorithm.Name());
+                    //Run time
+                    a.setRun_time_avg(test.getRun_times().get(algorithm));
+                    //Vertices
+                    a.setVertices_avg(algorithm.num_of_vertices());
+                } catch (NullPointerException e){e.printStackTrace();}
             }
         }
 
@@ -155,7 +165,7 @@ public class Test implements Tests{
 
         //Visualize part
         String[] names = get_names();
-        this.table = new TerminalTable(names,tests.size());
+        this.table = new AverageTerminalTable(names,tests.size());
         for(Average average : map.values()){
             this.table.parseRowString(average.toString());
         }
@@ -171,13 +181,14 @@ public class Test implements Tests{
     @Override
     public void visualize_results(){
             String[] headers = get_names();
-            this.table = new TerminalTable(headers, tests.size());
+            this.table = new AverageTerminalTable(headers, tests.size());
 
             for(RunTimeTest test:tests){
                 this.table.parseRowString(test.toString());
             }
 
             this.table.generate_table();
+
             this.table.printTable();
     }
 
@@ -195,10 +206,21 @@ public class Test implements Tests{
         return names;
     }
 
+    //Get 5 samples and visualize the results
+    @Override
+    public void get_samples_table(){
+        Table sample_table = new SampleTerminalTable(tests.stream().toList());
+        sample_table.printTable();
+    }
+
+
     public static void main(String[] args) {
         Test test = new Test();
-        test.run_tests(4,50,5000);
+        for (int i = 0; i <4 ; i++) {
+            test.run_tests(4,50,5000);
+        }
         test.get_avg_and_visualize_results();
     }
+
 
 }

@@ -1,8 +1,80 @@
 package test.Results;
 
-public interface Tests {
-    public void run_tests(int graph_size,int num_of_samples , int n);
-    public void get_avg_and_visualize_results();
-    public void print_results();
-    public void visualize_results();
+import test.Main.RunTimeTest;
+import test.Table.Table;
+import test.agorithms.AStar;
+import test.agorithms.BFS;
+import test.components.Graph;
+import test.components.Node;
+
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public abstract class Tests {
+    private Set<RunTimeTest> nodes;
+    private Queue<RunTimeTest> tests;
+
+    private AtomicInteger graphs_idx;
+    private Table table;
+    public void clear() {
+        this.table=null;
+        this.tests = new ArrayBlockingQueue<>(200);
+        this.graphs_idx.set(0);
+        this.nodes.clear();
+    }
+
+    public void run_tests(int graph_size,int num_of_samples , int n){
+        boolean res = false;
+        do {
+            try {
+                res = step(n, graph_size);
+            } catch (NullPointerException e) {}
+        }while(!res);
+        System.out.println("Graph number " + (graphs_idx.getAndIncrement() + 1) + " successfully created. ");
+    }
+    public boolean step(int n, int graph_size) {
+        /**This Function represents 1 step in the test of the project,
+         We're generating 1 random graph from the final state, and then running the algorithm from
+         there and sample the run time foreach one.
+         Args:
+         int n - The number of steps to generate from the final state.
+         Graph - The graph that we want to run the sample on (will usually be empty to save resources).
+         The function will return true of all the steps inside go right.
+         **/
+        try {
+            boolean stop = false;
+            //Clearing the graph and then generate him
+            Graph graph = new Graph(graph_size);
+
+            graph = graph.generate_n_steps_from_final_state(n);
+
+            //Making sure we're getting a unique node each iteration
+            Node rand_node = null;
+            do {
+                rand_node = graph.get_random_node();
+            }
+            while(nodes.contains(rand_node) && rand_node==null);
+
+            //Initialize the algorithms
+            BFS bfs = new BFS(rand_node, graph);
+            AStar manhattan = new AStar(rand_node, graph, "M");
+            AStar dijkstra = new AStar(rand_node, graph, "D");
+            AStar greedy_bfs = new AStar(rand_node, graph, " ");
+            //Sample the run time foreach
+            RunTimeTest runTimeTest = new RunTimeTest(manhattan, dijkstra, bfs, greedy_bfs);
+            runTimeTest.test();
+            tests.add(runTimeTest);
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+    public abstract void get_avg_and_visualize_results();
+    public abstract void print_results();
+    public abstract void visualize_results();
+
+    //Get 5 samples and visualize the results
+    public abstract void get_samples_table();
 }

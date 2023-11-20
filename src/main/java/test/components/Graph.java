@@ -62,7 +62,7 @@ public class Graph {
         do {
             index = Math.abs(random.nextInt()) % connections.size() + 1;
             node = getNodeByID(index);
-        } while (node == null || node.getState().isGoalState());
+        } while (node == null && node.getState().isGoalState());
 
         return node;
     }

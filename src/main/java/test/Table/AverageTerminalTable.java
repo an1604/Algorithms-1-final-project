@@ -1,20 +1,34 @@
-package test.Main;
+package test.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TerminalTable {
+public class AverageTerminalTable implements Table {
     private String[] headers;
+    private StringBuilder data;
+
     private List<String[]> rows;
+
     private String initial_state;
-    public TerminalTable(String[] columnNames, int num_rows) {
+    public AverageTerminalTable(String[] columnNames, int num_rows) {
         this.headers = new String[]{"Params: ", "Run time ", "Vertices"};
         this.rows = new ArrayList<>();
+        this.data = new StringBuilder();
+    }
+    @Override
+    public List<String[]> getRows() {
+        return rows;
     }
 
+    @Override
     public void printTable() {
+        System.out.println("Initial state : \n " + this.initial_state);
+
+        System.out.println("Averages : " );
+
+
         int[] columnWidths = calculateColumnWidths();
 
         // Print headers
@@ -49,8 +63,8 @@ public class TerminalTable {
         }
     }
 
-
-    private int[] calculateColumnWidths() {
+    @Override
+    public int[] calculateColumnWidths() {
         int numColumns = headers.length;
         int[] columnWidths = new int[numColumns];
 
@@ -75,21 +89,13 @@ public class TerminalTable {
         return columnWidths;
     }
 
-
+    @Override
     public void generate_table(){
         filter_empty_strings_from_rows();
     }
 
-    private String[] generateHeaders(String[] columnNames) {
-        String[] generatedHeaders = new String[columnNames.length + 1];
-        generatedHeaders[0] = "Params";
-        for (int i = 0; i < columnNames.length; i++) {
-            generatedHeaders[i + 1] = columnNames[i];
-        }
-        return generatedHeaders;
-    }
 
-
+    @Override
     public void parseRowString(String input) {
         // Define patterns for the start and end of the desired sections
         Pattern startPattern = Pattern.compile("Alg name :");
@@ -166,13 +172,27 @@ public class TerminalTable {
             filter_rows_new.add(newRow.toArray(new String[0]));
         }
         rows =filter_rows_new;
+        //Generating the data string
+        generate_data();
+    }
+    @Override
+    public String getData() {
+        return data.toString();
     }
 
+    private void generate_data() {
+        for(String[] row : rows){
+            this.data.append( row[0]+"\n" );
+            this.data.append( row[1]+"\n");
+            this.data.append( row[2]+"\n");
+            this.data.append("--------------");
+        }
+    }
 
 
     public static void main(String[] args) {
         String[] names = {"BFS", "A*"};
-        TerminalTable table = new TerminalTable(names, 5);
+        AverageTerminalTable table = new AverageTerminalTable(names, 5);
         table.generate_table();
         table.printTable();
     }
