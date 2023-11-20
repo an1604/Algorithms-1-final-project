@@ -1,6 +1,6 @@
 package test.Table;
 
-import test.Main.RunTimeTest;
+import test.main.RunTimeTest;
 import test.Results.Results;
 import test.agorithms.Algorithms;
 

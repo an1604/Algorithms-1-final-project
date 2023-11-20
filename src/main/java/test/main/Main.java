@@ -1,4 +1,4 @@
-package test.Main;
+package test.main;
 
 import test.Multi_Thread.Task;
 import test.Results.Test;

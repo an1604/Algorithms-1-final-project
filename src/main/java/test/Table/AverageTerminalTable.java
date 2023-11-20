@@ -61,7 +61,7 @@ public class AverageTerminalTable implements Table {
             // Print Run Time and Vertices
             System.out.format("%-" + columnWidths[1] + "s", row[1]);
             System.out.print(" | ");
-            System.out.format("%-" + columnWidths[2] + "s", row[2]);
+            System.out.format("%-" + columnWidths[2] + "s", row[2].split(" ")[1]);
             System.out.print(" | ");
 
             System.out.println();

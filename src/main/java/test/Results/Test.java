@@ -1,7 +1,7 @@
 package test.Results;
 
-import test.Main.Average;
-import test.Main.RunTimeTest;
+import test.main.Average;
+import test.main.RunTimeTest;
 import test.Table.AverageTerminalTable;
 import test.Table.SampleTerminalTable;
 import test.Table.Table;

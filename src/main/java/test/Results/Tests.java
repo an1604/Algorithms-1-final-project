@@ -1,6 +1,6 @@
 package test.Results;
 
-import test.Main.RunTimeTest;
+import test.main.RunTimeTest;
 import test.Table.Table;
 import test.agorithms.AStar;
 import test.agorithms.BFS;
