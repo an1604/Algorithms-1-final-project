@@ -14,13 +14,13 @@ It contains a string representation of the runtime and the developed vertices fo
 The Test class extends the abstract Tests class and holds key methods for running tests and collecting results.
 
 ### Methods
-`run_tests(int graph_size, int num_of_samples, int n)`: Runs tests for a specified graph size, number of samples, and number of steps from the final state.
-`step(int n, int graph_size)`: Represents one step in the test, generating a random graph and running the algorithm.
-`clear()`: Clears the test data.
-`print_results()`: Prints the results based on user input.
-`get_avg_and_visualize_results()`: Computes and visualizes the average results.
-`visualize_results()`: Visualizes the results.
-`get_samples_table()`: Gets 5 samples and visualizes the results.
+1) `run_tests(int graph_size, int num_of_samples, int n)`: Runs tests for a specified graph size, number of samples, and number of steps from the final state.
+2) `step(int n, int graph_size)`: Represents one step in the test, generating a random graph and running the algorithm.
+3) `clear()`: Clears the test data.
+4) `print_results()`: Prints the results based on user input.
+5) `get_avg_and_visualize_results()`: Computes and visualizes the average results.
+6) `visualize_results()`: Visualizes the results.
+7) `get_samples_table()`: Gets 5 samples and visualizes the results.
 
 
 ## Tests Class (Abstract)
