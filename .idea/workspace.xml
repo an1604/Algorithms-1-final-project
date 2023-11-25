@@ -4,15 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e36ea065-6b42-4b95-88dc-065f797cf7f5" name="Changes" comment="new commit">
+    <list default="true" id="e36ea065-6b42-4b95-88dc-065f797cf7f5" name="Changes" comment="Final commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Main/Average.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/main/Average.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Main/RunTimeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/main/RunTimeTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Results/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Results/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Results/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Results/Tests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Table/AverageTerminalTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Table/AverageTerminalTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Table/SampleTerminalTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Table/SampleTerminalTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/components/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/components/Graph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/States/FinishState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/States/RegulaerState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/States/State.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/test/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/test/Part_C/BFS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/test/Part_C/DFS$GraphEdges.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/test/Part_C/DFS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/test/Part_D/AStar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/test/Part_D/Costs.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/test/part_A_B/Graph.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/test/part_A_B/Node.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/test/part_A_B/Point.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +36,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -44,6 +50,10 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="Clean_code" />
+                    <option name="lastUsedInstant" value="1700934702" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
                     <option name="lastUsedInstant" value="1700217785" />
@@ -68,6 +78,13 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="2Y9cichpHepyhrnUFdQsfeRzDNF" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -80,8 +97,9 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Clean__code",
     "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/adina/Desktop/תקיית_עבודות/עבודת גמר אלגוריתמים/פתמ 2/final_project_algo1",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -187,6 +205,8 @@
       <workItem from="1699941705340" duration="57032000" />
       <workItem from="1700114574288" duration="23840000" />
       <workItem from="1700155160087" duration="17214000" />
+      <workItem from="1700478690290" duration="2101000" />
+      <workItem from="1700934444546" duration="1435000" />
     </task>
     <task id="LOCAL‎-00001" summary="new commit">
       <option name="closed" value="true" />
@@ -340,7 +360,15 @@
       <option name="project" value="LOCAL‎" />
       <updated>1700217683968</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL‎-00020" summary="Final commit">
+      <option name="closed" value="true" />
+      <created>1700474943613</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL‎-00020" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1700474943613</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -350,7 +378,8 @@
     <MESSAGE value="new commit" />
     <MESSAGE value="Adding the initial_state in Node class" />
     <MESSAGE value="Huge commit!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Huge commit!" />
+    <MESSAGE value="Final commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Final commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
