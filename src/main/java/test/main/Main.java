@@ -90,7 +90,7 @@ public class Main {
                     }
                     break;
                 case "3":
-                  general_test.print_results();
+                  general_test.menu_for_showing_results();
                   is_executed = false;
                   break;
                 case "4":
@@ -115,14 +115,19 @@ public class Main {
             }
             else
                 is_executed = true;
+
+
             if(choice.equals("1")){
                 test.get_samples_table();
+                test.print_table();
             } else if (choice.equals("2")) {
-                test.get_avg_and_visualize_results();
+                test.genearge_avarege_run_time_table();
+                test.print_table();
             }
 
             if(test!=null)
                 general_test=test;
+
         }
         System.out.println("Done");
     }

@@ -236,7 +236,8 @@ public class Graph {
         }
 
         //Resetting the puzzle
-        tmp_puzzle = check_and_reset_puzzle_if_needed(is_inside_if,tmp_puzzle, node.getPuzzle());
+        if(is_inside_if)
+            tmp_puzzle = reset_puzzle_state( node.getPuzzle());
 
         //Down
         int down_idx_row = row +1;
@@ -246,7 +247,8 @@ public class Graph {
         }
 
         //Resetting the puzzle
-        tmp_puzzle = check_and_reset_puzzle_if_needed(is_inside_if,tmp_puzzle, node.getPuzzle());
+        if(is_inside_if)
+            tmp_puzzle = reset_puzzle_state( node.getPuzzle());
 
 
         // Right
@@ -258,7 +260,8 @@ public class Graph {
         }
 
         //Resetting the puzzle
-        tmp_puzzle = check_and_reset_puzzle_if_needed(is_inside_if,tmp_puzzle, node.getPuzzle());
+        if(is_inside_if)
+            tmp_puzzle = reset_puzzle_state(node.getPuzzle());
 
         // Left
         int left_idx_col = col -1;
@@ -299,11 +302,8 @@ public class Graph {
         this.addEdge(node.getID() , node1.getID());
     }
 
-    private int[][] check_and_reset_puzzle_if_needed(boolean isInsideIf, int[][] tmp_puzzle, int[][] original_puzzle) {
-        if (isInsideIf) {
-            tmp_puzzle = clonePuzzle(original_puzzle);
-            isInsideIf = false;
-        }
+    private int[][] reset_puzzle_state(int[][] original_puzzle) {
+        int[][] tmp_puzzle = clonePuzzle(original_puzzle);
         return tmp_puzzle;
     }
 
@@ -370,8 +370,6 @@ public class Graph {
     }
 
 
-
-
     private static int generate_random_number(int numOfElements, Set<Integer> nums) {
         Random random = new Random();
         int num;
@@ -419,7 +417,7 @@ public class Graph {
     }
 
 
-    public   Graph generate_n_steps_from_final_state(int n){
+    public  Graph generate_n_steps_from_final_state(int n){
         //Clearing the graph
        clear_graph();
         //Creating the node and add to the graph

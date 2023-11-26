@@ -20,24 +20,26 @@ public abstract class Tests {
     private Queue<RunTimeTest> tests;
 
     private AtomicInteger graphs_idx;
+
     private Table table;
+
     public void clear() {
         this.table=null;
         this.tests = new ArrayBlockingQueue<>(200);
         this.graphs_idx.set(0);
         this.nodes.clear();
     }
-
     public void run_tests(int graph_size,int num_of_samples , int n){
         boolean res = false;
         do {
             try {
-                res = step(n, graph_size);
+                res = single_test(n, graph_size);
             } catch (NullPointerException e) {}
         }while(!res);
         System.out.println("Graph number " + (graphs_idx.getAndIncrement() + 1) + " successfully created. ");
     }
-    public boolean step(int n, int graph_size) {
+
+    public boolean single_test(int n, int graph_size) {
         /**This Function represents 1 step in the test of the project,
          We're generating 1 random graph from the final state, and then running the algorithm from
          there and sample the run time foreach one.
@@ -74,8 +76,15 @@ public abstract class Tests {
         }
         return true;
     }
-    public abstract void get_avg_and_visualize_results();
-    public abstract void print_results();
+    public void setTable(Table table) {
+        this.table = table;
+    }
+    public void print_table(){
+        this.table.printTable();
+    }
+
+    public abstract void genearge_avarege_run_time_table();
+    public abstract void menu_for_showing_results();
     public abstract void visualize_results();
 
     //Get 5 samples and visualize the results

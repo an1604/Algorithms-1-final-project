@@ -35,7 +35,7 @@ public class Test extends Tests{
         this.graphs_idx  = new AtomicInteger(0);
     }
 
-    public boolean step(int n, int graph_size) {
+    public boolean single_test(int n, int graph_size) {
         /**
          * This Function represents 1 step in the test of the project,
          We're generating 1 random graph from the final state, and then running the algorithm from
@@ -46,18 +46,11 @@ public class Test extends Tests{
          The function will return true of all the steps inside go right.
          **/
         try {
-            boolean stop = false;
             //Clearing the graph and then generate him
             Graph graph = new Graph(graph_size);
-
             graph = graph.generate_n_steps_from_final_state(n);
 
-            //Making sure we're getting a unique node each iteration
-            Node rand_node = null;
-            do {
-                 rand_node = graph.get_random_node();
-            }
-            while(nodes.contains(rand_node) && rand_node==null);
+            Node rand_node =get_random_and_unique_node_for_test(graph);
             nodes.add(rand_node);
 
             //Initialize the algorithms
@@ -65,6 +58,7 @@ public class Test extends Tests{
             AStar manhattan = new AStar(rand_node, graph, "M", false);
             AStar dijkstra = new AStar(rand_node, graph, "D",false);
             AStar greedy_bfs = new AStar(rand_node, graph, " ",false);
+
             //Sample the run time foreach
             RunTimeTest runTimeTest = new RunTimeTest(manhattan, dijkstra, bfs, greedy_bfs);
             runTimeTest.test();
@@ -74,12 +68,22 @@ public class Test extends Tests{
         }
         return true;
     }
+
+    private Node get_random_and_unique_node_for_test(Graph graph) {
+        Node rand_node = null;
+        do {
+            rand_node = graph.get_random_node();
+        }
+        while(nodes.contains(rand_node) && rand_node==null);
+        return rand_node;
+    }
+
     @Override
     public void run_tests(int graph_size,int num_of_samples , int n) {
         boolean res = false;
         do {
             try {
-                 res = step(n, graph_size);
+                 res = single_test(n, graph_size);
             } catch (NullPointerException e) {}
         }while(!res);
         System.out.println("Graph number " + (graphs_idx.getAndIncrement() + 1) + " successfully created. ");
@@ -94,7 +98,7 @@ public class Test extends Tests{
         this.nodes.clear();
     }
     @Override
-    public  void print_results(){
+    public void menu_for_showing_results(){
         Scanner scanner = new Scanner(System.in);
         boolean stop = false;
         String choice = " ";
@@ -144,7 +148,7 @@ public class Test extends Tests{
     }
 
     @Override
-    public void get_avg_and_visualize_results() {
+    public void genearge_avarege_run_time_table() {
         Algorithms[] algorithms =get_algorithms();
         Map<String, Average> map = new HashMap<>();
         //Getting all the Algorithms and map them with average instance
@@ -170,13 +174,13 @@ public class Test extends Tests{
         }
 
         //Visualize part
-        String[] names = get_names();
+        String[] names = get_algorithm_names();
         this.table = new AverageTerminalTable(names,tests.size());
         for(Average average : map.values()){
             this.table.parseRowString(average.toString());
         }
         this.table.generate_table();
-        this.table.printTable();
+        super.setTable(this.table);
     }
 
     private Algorithms[] get_algorithms() {
@@ -186,7 +190,7 @@ public class Test extends Tests{
     //Create an instance of the table class and visualize the results
     @Override
     public void visualize_results(){
-            String[] headers = get_names();
+            String[] headers = get_algorithm_names();
             this.table = new AverageTerminalTable(headers, tests.size());
 
             for(RunTimeTest test:tests){
@@ -194,11 +198,10 @@ public class Test extends Tests{
             }
 
             this.table.generate_table();
-
-            this.table.printTable();
+            print_table();
     }
 
-    private String[] get_names() {
+    private String[] get_algorithm_names() {
         // Getting the first element to get the algorithm names
         RunTimeTest runTimeTest = tests.peek();
         int size = runTimeTest.getAlgorithms().length;
@@ -215,8 +218,8 @@ public class Test extends Tests{
     //Get 5 samples and visualize the results
     @Override
     public void get_samples_table(){
-        Table sample_table = new SampleTerminalTable(tests.stream().toList());
-        sample_table.printTable();
+        this.table= new SampleTerminalTable(tests.stream().toList());
+        super.setTable(this.table);
     }
 
 

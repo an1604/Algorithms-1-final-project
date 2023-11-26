@@ -30,11 +30,11 @@ public class AStar implements Algorithms{
         this.visited= new HashSet<>();
         this.path = new ArrayList<>();
         this.path_found= false;
-        this.name = check_for_name();
+        this.name = build_algorithm_name_from_prompt();
         this.single_run = single_run;
     }
 
-    private String check_for_name() {
+    private String build_algorithm_name_from_prompt() {
         StringBuilder sb =new StringBuilder("A star");
         switch (prompt) {
             case "M":
@@ -71,13 +71,12 @@ public class AStar implements Algorithms{
             start_node.getCosts_for_AStar().setG_n(0);
         }catch (NullPointerException e){
             e.printStackTrace();
-            Costs costs = new Costs(0,start_node.getState());
-            costs.setG_n(0);
-            start_node.setCosts_for_AStar(costs);
+            initialize_costs_for_start_node();
         }
 
         //Calculate f(n) for the start node
-        get_cost(start_node);
+        if(!start_node.getCosts_for_AStar().isCalculated())
+            get_cost(start_node);
         queue.add(start_node);
         Node current_node =null;
         if (single_run) {
@@ -118,7 +117,9 @@ public class AStar implements Algorithms{
                  //Calculate the cost function
                  calc_costs_for_neighbors(neighbors);
 
-                 if(!this.path_found) {
+                 Node is_finish_state_node = checking_for_finish_state(neighbors);
+
+                 if(is_finish_state_node==null) {
                      // Finding the minimum cost function from the neighbors
                      LinkedList<Node> min_nodes = generate_minimum_cost(neighbors);
 
@@ -131,12 +132,31 @@ public class AStar implements Algorithms{
                          //Adding the node into the set to make sure we not visit her again
                          visited.add(current_node.getID());
                  }
+                 else{
+                     path.add(is_finish_state_node);
+                     this.path_found = true;
+                 }
         }
         if(!this.path_found)
             System.out.println("No solution found ...");
         else if(single_run)
             print_path();
 
+    }
+
+    private Node checking_for_finish_state(Set<Node> neighbors) {
+        for(Node neighbor : neighbors){
+            if(neighbor.getState().isGoalState()){
+                return neighbor;
+            }
+        }
+        return null;
+    }
+
+    private void initialize_costs_for_start_node() {
+        Costs costs = new Costs(0,start_node.getState());
+        costs.setG_n(0);
+        start_node.setCosts_for_AStar(costs);
     }
 
     @Override
@@ -161,7 +181,8 @@ public class AStar implements Algorithms{
 
     private void calc_costs_for_neighbors(Set<Node> neighbors) {
         for(Node neighbor : neighbors){
-                get_cost(neighbor);
+            if(!neighbor.getCosts_for_AStar().isCalculated())
+                    get_cost(neighbor);
                 //Checking if we in the final state...
                 if(neighbor.getCosts_for_AStar().getF_n() == 0){
                     if(neighbor.getState().isGoalState()){
@@ -209,7 +230,6 @@ public class AStar implements Algorithms{
 
 
     private void get_cost(Node neighbor) {
-        if(!neighbor.getCosts_for_AStar().isCalculated()) {
             switch (prompt) {
                 case "M":
                     neighbor.getCosts_for_AStar().get_Manhattan_costs();
@@ -222,7 +242,6 @@ public class AStar implements Algorithms{
                     neighbor.getCosts_for_AStar().get_Greedy_BFS();
                     break;
             }
-        }
     }
 
 }
