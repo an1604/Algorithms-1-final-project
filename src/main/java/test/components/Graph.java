@@ -1,14 +1,26 @@
-package test.part_A_B;
+package test.components;
 
-import States.FinishState;
-import States.State;
-import test.Part_C.DFS;
+import test.States.FinishState;
+import test.States.State;
+import test.agorithms.AStar;
+import test.agorithms.Algorithms;
+import test.agorithms.BFS;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Graph {
-    private Map<Integer , Map<Node , Set<Node>>> connections ;
+
+    /**The Graph class.
+     * In this class, we consider a couple of things:
+     * connections (Map<Integer , Map<Node, Set<Node>>>) - The map between all nodes and there connections (edges),
+         The graph is undirected.
+     * final_state (State) - The final state of the graph (in this case, the final puzzle representation).
+     * id (int) - Every vertex has unique id.
+     * depth (int) - The depth of each node was generated from the initial node.
+     * */
+
+    private Map<Integer , Map<Node, Set<Node>>> connections ;
     private State final_state;
     private  int size;
 
@@ -27,7 +39,7 @@ public class Graph {
     }
 
     public Graph(int size) {
-        this.connections = new HashMap<>();
+        this.connections = new ConcurrentHashMap<>();
         this.size = size;
         this.id =1 ;
         final_state = FinishState.getFinishState(size);
@@ -36,10 +48,6 @@ public class Graph {
 
 
 
-
-    public State getFinal_state() {
-        return final_state;
-    }
 
     public int getSize() {
         return size;
@@ -50,8 +58,24 @@ public class Graph {
     }
 
     public Node getNodeByID(int id){
-        return connections.get(id).keySet().iterator().next();
+        try {
+            return connections.get(id).keySet().iterator().next();
+        }catch (NullPointerException e){
+            return null;
+        }
     }
+    public Node get_random_node(){
+        Random random = new Random();
+        int index;
+        Node node = null;
+        do {
+            index = Math.abs(random.nextInt()) % connections.size() + 1;
+            node = getNodeByID(index);
+        } while (node == null && node.getState().isGoalState());
+
+        return node;
+    }
+
     public void addNode(){
         // Creating the insider map
         Map<Node , Set<Node>> nodeMap = new HashMap<>();
@@ -115,8 +139,6 @@ public class Graph {
 
     public static Graph generate_random_graph(int size){
         Graph g = new Graph(size);
-        // Generate random number foreach node
-        Random random = new Random();
         // Making sure that every number shows only once
         Set<Integer> nums = new HashSet<>();
         Scanner s = new Scanner(System.in);
@@ -124,6 +146,12 @@ public class Graph {
         int nodes = s.nextInt();
 
         // Generation part
+        make_k_generation_steps(nodes,g,nums,size);
+        return g;
+    }
+
+    private static void make_k_generation_steps(int nodes, Graph g, Set<Integer> nums, int size) {
+        Random random = new Random();
         for (int k = 0; k< nodes; k++) {
             Node node = new Node(size, g.get_increase_Id(), g.get_increase_depth());
             int[][] puzzle = new int[size][size];
@@ -139,9 +167,8 @@ public class Graph {
 
             // Generating the states from this node (move the null up,down,left,right)
             g.get_states(node);
-                nums.clear();
-            }
-        return g;
+            nums.clear();
+        }
     }
 
     public Graph generate_new_graph_from_given_graph(boolean add_neighbors) {
@@ -152,21 +179,7 @@ public class Graph {
         int size = getConnections().size();
 
         // Generating a new starting node
-        Node startNode = null;
-        do {
-            try {
-                Random random = new Random();
-                int index = Math.abs(random.nextInt()) % size + 1;
-                startNode = getNodeByID(index);
-
-                // Storing neighbors before clearing the graph
-                if (add_neighbors) {
-                    neighbors = getNeighbors(index);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        } while (startNode == null);
+        Node startNode = get_random_node();
 
         // Clearing the graph
         clear_graph();
@@ -202,111 +215,109 @@ public class Graph {
 
     //Generating the moving states for a given node
     public void get_states(Node node) {
+        //If the node already exists, we return immanently without generating the states.
+        if(getNodeIfExists(node) !=null && getNeighbors(node.getID()).size() >1)
+            return;
+
         // For the clone puzzle function, to make sure that we call just when we need to
         boolean is_inside_if = false;
-
-        Node node1 = null , temp=null;
         int row = node.getEmpty_point().getX();
         int col = node.getEmpty_point().getY();
         int [][] tmp_puzzle = clonePuzzle(node.getPuzzle());
+
         //Checking each one
         //Up
         int up_idx_row = row - 1;
         // If we still in bounds, start to generate
         if (up_idx_row<size && up_idx_row >=0 ){
             is_inside_if = true;
-            // Generating the new puzzle state
-            this.swapElements(tmp_puzzle,up_idx_row,col ,row,col);
-            node1 = new Node(node,get_increase_Id(),new Point(up_idx_row,col), this.depth);
-            //Checking if the Node contains already, if not, temp will be null
-            temp = getNodeIfExists(node1);
-            //updating node1 in accordance to temp
-            node1 = temp==null? node1:temp;
-
-            node1.setPuzzle(tmp_puzzle);
-            //Adding the node to the graph
-            this.add_generated_Node(node1);
-            // Adding an edge between the nodes
-            this.addEdge(node.getID() , node1.getID());
+            // Setting the upper state
+            generate_upper_state(up_idx_row,tmp_puzzle,row,col,node);
         }
 
         //Resetting the puzzle
-        if (is_inside_if) {
-            tmp_puzzle = clonePuzzle(node.getPuzzle());
-            is_inside_if = false;
-        }
+        if(is_inside_if)
+            tmp_puzzle = reset_puzzle_state( node.getPuzzle());
 
         //Down
         int down_idx_row = row +1;
         if(down_idx_row<size && down_idx_row>=0){
             is_inside_if = true;
-            this.swapElements(tmp_puzzle,down_idx_row,col ,row,col);
-            node1 = new Node(node,get_increase_Id(),new Point(down_idx_row,col), this.depth);
-
-            //Checking if the Node contains already, if not, temp will be null
-            temp = getNodeIfExists(node1);
-            //updating node1 in accordance to temp
-            node1 = temp==null? node1:temp;
-
-            node1.setPuzzle(tmp_puzzle);
-            //Adding the node to the graph
-            this.add_generated_Node(node1);
-            // Adding an edge between the nodes
-            this.addEdge(node.getID() , node1.getID());
+            generate_downer_state(tmp_puzzle,down_idx_row,row,col, node );
         }
 
         //Resetting the puzzle
-        if (is_inside_if) {
-            tmp_puzzle = clonePuzzle(node.getPuzzle());
-            is_inside_if = false;
-        }
+        if(is_inside_if)
+            tmp_puzzle = reset_puzzle_state( node.getPuzzle());
+
 
         // Right
         int right_idx_col = col +1;
 
         if (right_idx_col <size && right_idx_col>=0){
             is_inside_if = true;
-            this.swapElements(tmp_puzzle,row,right_idx_col ,row,col);
-            node1 = new Node(node,get_increase_Id(),new Point(row,right_idx_col), this.depth);
-
-            //Checking if the Node contains already, if not, temp will be null
-            temp = getNodeIfExists(node1);
-            //updating node1 in accordance to temp
-            node1 = temp==null? node1:temp;
-
-            node1.setPuzzle(tmp_puzzle);
-            //Adding the node to the graph
-            this.add_generated_Node(node1);
-            // Adding an edge between the nodes
-            this.addEdge(node.getID() , node1.getID());
+           generate_right_state(tmp_puzzle,right_idx_col,row,col,node);
         }
 
         //Resetting the puzzle
-        if (is_inside_if) {
-            tmp_puzzle = clonePuzzle(node.getPuzzle());
-        }
+        if(is_inside_if)
+            tmp_puzzle = reset_puzzle_state(node.getPuzzle());
 
         // Left
         int left_idx_col = col -1;
         if (left_idx_col <size && left_idx_col>=0 ){
-            this.swapElements(tmp_puzzle,row,left_idx_col ,row,col);
-            node1 = new Node(node,get_increase_Id(),new Point(row,left_idx_col), this.depth);
-
-            //Checking if the Node contains already, if not, temp will be null
-            temp = getNodeIfExists(node1);
-            //updating node1 in accordance to temp
-            node1 = temp==null? node1:temp;
-
-            node1.setPuzzle(tmp_puzzle);
-            //Adding the node to the graph
-            this.add_generated_Node(node1);
-            // Adding an edge between the nodes
-            this.addEdge(node.getID() , node1.getID());
+            generate_left_state(tmp_puzzle,left_idx_col,row,col,node);
         }
-        //after we made the changes, call dfs to search for cycles and remove them
-//        DFS dfs = new DFS(this);
-//        dfs.dfs();
     }
+
+    private void generate_left_state(int[][] tmp_puzzle, int left_idx_col, int row, int col, Node node) {
+        this.swapElements(tmp_puzzle,row,left_idx_col ,row,col);
+        Node node1 = new Node(node,get_increase_Id(),new Point(row,left_idx_col), this.depth);
+        node1.setPuzzle(tmp_puzzle);
+        //Adding the node to the graph
+        this.add_generated_Node(node1);
+        // Adding an edge between the nodes
+        this.addEdge(node.getID() , node1.getID());
+    }
+
+    private void generate_right_state(int[][] tmp_puzzle, int right_idx_col, int row, int col, Node node) {
+        this.swapElements(tmp_puzzle,row,right_idx_col ,row,col);
+        Node node1 = new Node(node,get_increase_Id(),new Point(row,right_idx_col), this.depth);
+        //Setting the puzzle to the right puzzle
+        node1.setPuzzle(tmp_puzzle);
+
+        //Adding the node to the graph
+        this.add_generated_Node(node1);
+        // Adding an edge between the nodes
+        this.addEdge(node.getID() , node1.getID());
+    }
+
+    private void generate_downer_state(int[][] tmp_puzzle, int down_idx_row, int row, int col, Node node) {
+        this.swapElements(tmp_puzzle,down_idx_row,col ,row,col);
+        Node node1 = new Node(node,get_increase_Id(),new Point(down_idx_row,col), this.depth);
+        node1.setPuzzle(tmp_puzzle);
+        //Adding the node to the graph
+        this.add_generated_Node(node1);
+        // Adding an edge between the nodes
+        this.addEdge(node.getID() , node1.getID());
+    }
+
+    private int[][] reset_puzzle_state(int[][] original_puzzle) {
+        int[][] tmp_puzzle = clonePuzzle(original_puzzle);
+        return tmp_puzzle;
+    }
+
+    private void generate_upper_state(int up_idx_row, int[][] tmp_puzzle, int row, int col, Node node) {
+        // Generating the new puzzle state
+        this.swapElements(tmp_puzzle,up_idx_row,col ,row,col);
+        Node node1 = new Node(node,get_increase_Id(),new Point(up_idx_row,col), this.depth);
+        node1.setPuzzle(tmp_puzzle);
+        //Adding the node to the graph
+        this.add_generated_Node(node1);
+        // Adding an edge between the nodes
+        this.addEdge(node.getID() , node1.getID());
+    }
+
     //This method checks if new state is already inside the graph
     private Node getNodeIfExists(Node targetNode) {
         for (Map.Entry<Integer, Map<Node, Set<Node>>> entry : connections.entrySet()) {
@@ -351,12 +362,12 @@ public class Graph {
 
     // Helper method to swap elements in a puzzle
     private void swapElements(int[][] puzzle, int row1, int col1, int row2, int col2) {
-        int temp = puzzle[row1][col1];
-        puzzle[row1][col1] = puzzle[row2][col2];
-        puzzle[row2][col2] = temp;
+        try {
+            int temp = puzzle[row1][col1];
+            puzzle[row1][col1] = puzzle[row2][col2];
+            puzzle[row2][col2] = temp;
+        }catch (ArrayIndexOutOfBoundsException e){}
     }
-
-
 
 
     private static int generate_random_number(int numOfElements, Set<Integer> nums) {
@@ -406,7 +417,7 @@ public class Graph {
     }
 
 
-    public Graph generate_n_steps_from_final_state(int n){
+    public  Graph generate_n_steps_from_final_state(int n){
         //Clearing the graph
        clear_graph();
         //Creating the node and add to the graph
@@ -426,7 +437,7 @@ public class Graph {
                 for(Node neighbor : getNeighbors(node.getID())){
                     if(!neighbor.isVisited())
                         neighbor.setDepth(depth_);
-                        queue.add(neighbor);
+                    queue.add(neighbor);
                 }
                 //We're decreasing n only when we generated new state!
                 n--;
@@ -455,16 +466,21 @@ public class Graph {
 
 
     //This function will be called from the main and generate the graph from scratch
-    public static Graph menu() {
+    public static void menu() {
+        System.out.println("Welcome to the graph menu!");
         boolean stop = false;
         Scanner scanner = new Scanner(System.in);
-        System.out.println("What is the size of the puzzle?");
+        System.out.println("What is the size of the puzzle? \n" +
+                "Choose 4 for 4X4 or 5 for 5X5.");
         int size = scanner.nextInt();
         String choice ="";
         Graph graph = new Graph(size);
         System.out.println("Lets build the graph...");
         while(!stop){
-            System.out.println("Enter your choice : \n 1) Create new node\n 2) Create new edge \n 3)Remove node \n 4) Print the graph \n 5) Generate random graph\n  6) Generate n steps from the final state \n7)Exit");
+            scanner = new Scanner(System.in);
+            System.out.println("Enter your choice : \n 1) Create new node\n 2) Create new edge \n 3)Remove node \n 4) Print the graph \n" +
+                    " 5) Generate random graph\n  6) Generate n steps from the final state \n" +
+                    "7) Make a single BFS traverse example \n 8) Make a single A star traverse example \n 9)Exit");
             choice = scanner.nextLine();
             switch (choice){
                 case "1":
@@ -494,6 +510,19 @@ public class Graph {
                     graph = graph.generate_n_steps_from_final_state(n);
                     break;
                 case "7":
+                    Algorithms bfs= new BFS(graph.get_random_node(),graph,true);
+                    bfs.traverse();
+                    break;
+                case "8":
+                    Scanner prompt = new Scanner(System.in);
+                    System.out.println("Choose the heuristic function:" +
+                            "'M' - The Manhattan distance." +
+                            "'D' - For Dijkstra." +
+                            "'GBFS' - For Greedy BFS.  ");
+                    Algorithms a_star = new AStar(graph.get_random_node() , graph,prompt.nextLine(),true);
+                    a_star.traverse();
+                    break;
+                case "9":
                     System.out.println("Exiting...");
                     stop =true;
                     break;
@@ -502,7 +531,6 @@ public class Graph {
                     break;
             }
         }
-        return graph;
     }
     //Disconnect the edge between given  2 nodes.
     public void remove_edge(int startNode, int endNode) {
@@ -514,6 +542,7 @@ public class Graph {
         start_node.remove(getNodeByID(endNode));
         end_node.remove(getNodeByID(startNode));
     }
+
 }
 
 

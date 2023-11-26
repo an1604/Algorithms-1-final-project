@@ -1,6 +1,7 @@
-package States;
+package test.States;
 
 public class RegulaerState extends State{
+
 
     public RegulaerState(int size, int[][] puzzleArr) {
         super(size, puzzleArr);
