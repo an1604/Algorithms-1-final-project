@@ -12,13 +12,14 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
+
     public static void main(String[] args) {
         // We run the heavy tasks on multi-thread to save time
         ExecutorService es =  Executors.newFixedThreadPool(3);
 
         boolean stop = false;
         boolean is_executed = true;
-        Tests general_test=null;
+        Tests current_test=null;
         while (!stop) {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Choose your choice : ");
@@ -28,20 +29,19 @@ public class Main {
             System.out.println("(4) See the Graph implementation menu.");
             System.out.println("(5) Exit.");
 
-           String choice = scanner.nextLine();
+            String choice = scanner.nextLine();
             int puzzle_size=0,sample_size=0,n=0;
-            Tests test = null;
+
             if(choice.equals("2") || choice.equals("1")) {
-               //Getting information from the user
-               System.out.println("What is the size of the puzzle? ");
+                //Getting information from the user
+                System.out.println("What is the size of the puzzle? ");
                 puzzle_size = scanner.nextInt();
-               System.out.println("What is the size of the sample? ");
+                System.out.println("What is the size of the sample? ");
                 sample_size = scanner.nextInt();
-               System.out.println("How many steps from the final state?");
+                System.out.println("How many steps from the final state?");
                 n = scanner.nextInt();
                 System.out.println("Generating " + sample_size + " random graphs using 5000 steps from the final state, in size "
                         + (puzzle_size == 15 ? 4 : 5) + "X" + (puzzle_size == 15 ? 4 : 5) + "...");
-                 test = new Test();
             }
 
 
@@ -51,46 +51,21 @@ public class Main {
                     if(es.isTerminated() || es.isShutdown()){
                         es = Executors.newFixedThreadPool(3);
                     }
-                    if ((puzzle_size == 15 || puzzle_size == 24)) {
-                        if (puzzle_size == 15)
-                            puzzle_size = 4;
-                        else
-                            puzzle_size = 5;
-                        Task task = new Task(test , puzzle_size,sample_size,n);
-                        for (int i = 0; i < sample_size; i++) {
-                            es.execute(task);
-                        }
-                        es.shutdown();
-                    }
+                    current_test = start_test(puzzle_size,sample_size,es,n);
+
+
                     break;
                 case "2":
                     if(es.isTerminated() || es.isShutdown()){
                         es = Executors.newFixedThreadPool(3);
                     }
-
-                    if (puzzle_size == 15 || puzzle_size == 24 && (sample_size <= 10)) {
-                        if (puzzle_size == 15)
-                            puzzle_size = 4;
-                        else
-                            puzzle_size = 5;
-
-                        Task task = new Task(test , puzzle_size,sample_size,n);
-                        if(es.isTerminated() || es.isShutdown()){
-                            es = Executors.newFixedThreadPool(3);
-                        }
-                        for (int i = 0; i < sample_size; i++) {
-                            es.execute(task);
-                        }
-
-                        es.shutdown();
-                    }
-                    else{
-                        System.out.println("The sample is big, tru again");
+                    if (sample_size >10)
                         is_executed = false;
-                    }
+                    else
+                       current_test = start_test(puzzle_size,sample_size,es,n);
                     break;
                 case "3":
-                  general_test.menu_for_showing_results();
+                  current_test.menu_for_showing_results();
                   is_executed = false;
                   break;
                 case "4":
@@ -118,17 +93,32 @@ public class Main {
 
 
             if(choice.equals("1")){
-                test.get_samples_table();
-                test.print_table();
+                current_test.get_samples_table();
+                current_test.print_table();
             } else if (choice.equals("2")) {
-                test.genearge_avarege_run_time_table();
-                test.print_table();
+                current_test.genearge_avarege_run_time_table();
+                current_test.print_table();
             }
 
-            if(test!=null)
-                general_test=test;
 
         }
         System.out.println("Done");
+    }
+
+    public static Tests start_test(int puzzle_size , int sample_size, ExecutorService es, int num_of_steps ){
+        Tests test = null;
+        if ((puzzle_size == 15 || puzzle_size == 24)) {
+            if (puzzle_size == 15)
+                puzzle_size = 4;
+            else
+                puzzle_size = 5;
+             test = new Test();
+            Task task = new Task(test , puzzle_size,sample_size,num_of_steps);
+            for (int i = 0; i < sample_size; i++) {
+                es.execute(task);
+            }
+            es.shutdown();
+        }
+        return test;
     }
 }

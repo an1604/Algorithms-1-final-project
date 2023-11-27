@@ -67,12 +67,7 @@ public class AStar implements Algorithms{
         start_node.setVisited(true);
 
         //Initialize g(n) to 0 in the start node (we already in the initial node)
-        try {
-            start_node.getCosts_for_AStar().setG_n(0);
-        }catch (NullPointerException e){
-            e.printStackTrace();
-            initialize_costs_for_start_node();
-        }
+        initialize_costs_for_start_node();
 
         //Calculate f(n) for the start node
         if(!start_node.getCosts_for_AStar().isCalculated())
@@ -86,13 +81,12 @@ public class AStar implements Algorithms{
 
 
         while( !this.path_found){
+
             //Pooling the node from the Q and append the node to the path list
-            try {
-                current_node = queue.poll();
-            } catch (NullPointerException e){
-                e.printStackTrace();
+            current_node = get_current_node_from_Q(queue);
+
+            if (current_node==null)
                 continue;
-            }
 
             //Handling the finish state
             if (current_node.getState().isGoalState()) {
@@ -144,6 +138,15 @@ public class AStar implements Algorithms{
 
     }
 
+    private Node get_current_node_from_Q(Queue<Node> queue) {
+        try {
+            return queue.poll();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private Node checking_for_finish_state(Set<Node> neighbors) {
         for(Node neighbor : neighbors){
             if(neighbor.getState().isGoalState()){
@@ -154,14 +157,19 @@ public class AStar implements Algorithms{
     }
 
     private void initialize_costs_for_start_node() {
-        Costs costs = new Costs(0,start_node.getState());
-        costs.setG_n(0);
-        start_node.setCosts_for_AStar(costs);
+        try {
+            start_node.getCosts_for_AStar().setG_n(0);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+            Costs costs = new Costs(0,start_node.getState());
+            costs.setG_n(0);
+            start_node.setCosts_for_AStar(costs);
+        }
     }
 
     @Override
     public int num_of_vertices() {
-        return visited.size();
+        return visited.size()+1;
     }
 
     @Override

@@ -106,16 +106,21 @@ public class Graph {
 
         // Checking if the connection is legal and the nodes are different before creating the edge
         boolean res = check_connection(node1, node2) && (id1 != id2);
-        if (res) {
-            try {
-                connections.get(id1).get(node1).add(node2);
-                connections.get(id2).get(node2).add(node1);
-            } catch (NullPointerException e) {
-                System.out.println(e.getMessage());
-            }
+        if (res && can_make_edge(node1,node2)) {
             return;
         }
         System.out.println("Cannot make the edge because this step is not legal!");
+    }
+
+    private boolean can_make_edge(Node node1, Node node2) {
+        try {
+            connections.get(node1.getID()).get(node1).add(node2);
+            connections.get(node2.getID()).get(node2).add(node1);
+            return true;
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
 
@@ -404,17 +409,6 @@ public class Graph {
         }
     }
 
-
-    public Node get_random_node_for_bfs(){
-        Random r = new Random();
-        int index = Math.abs(r.nextInt() % id);
-        try {
-            return connections.get(index).keySet().iterator().next();
-        } catch (NullPointerException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
 
 
     public  Graph generate_n_steps_from_final_state(int n){
