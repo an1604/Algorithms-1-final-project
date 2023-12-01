@@ -126,13 +126,13 @@ public class Graph {
         queue.add(final_state_node);
         while (n>0){
             Node node = queue.poll();
-            if(!node.isVisited()) {
+            if(node.isVisited()) {
                 node.setVisited(true);
                 get_states(node);
                 //Keeping the depth to update all its neighbors
                 int depth_ = get_increase_depth();
                 for(Node neighbor : getNeighbors(node.getID())){
-                    if(!neighbor.isVisited())
+                    if(neighbor.isVisited())
                         neighbor.setDepth(depth_);
                     queue.add(neighbor);
                 }

@@ -94,11 +94,6 @@ public class AverageTerminalTable implements Table {
         return columnWidths;
     }
 
-    @Override
-    public void generate_table(){
-        filter_empty_strings_from_rows();
-    }
-
 
     @Override
     public void parseRowString(String input) {
@@ -134,6 +129,11 @@ public class AverageTerminalTable implements Table {
                 break;
             }
         }
+    }
+
+    @Override
+    public void generate_table(){
+        filter_empty_strings_from_rows();
     }
 
 
@@ -190,11 +190,4 @@ public class AverageTerminalTable implements Table {
         }
     }
 
-
-    public static void main(String[] args) {
-        String[] names = {"BFS", "A*"};
-        AverageTerminalTable table = new AverageTerminalTable(names, 5);
-        table.generate_table();
-        table.printTable();
-    }
 }

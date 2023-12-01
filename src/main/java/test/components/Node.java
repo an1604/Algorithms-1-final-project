@@ -48,12 +48,6 @@ public class Node {
     }
 
 
-    @Override
-    public String toString() {
-        return state.getPuzzleRepresentation();
-    }
-
-    // regular Ctor
     public Node(int size , int id, int depth) {
         this.visited = false;
         this.size = size;
@@ -64,15 +58,12 @@ public class Node {
         System.out.println("Generate node for you?");
         String s = scanner.nextLine();
         if (s.equals("no"))
-            initialPuzzle();
+            initial_Random_Puzzle();
         else
             this.state =new RegulaerState(size , puzzle);
 
     }
 
-    public int getDepth() {
-        return depth;
-    }
 
     //Ctor for the final state case.
 
@@ -84,31 +75,50 @@ public class Node {
         this.state =new RegulaerState(size , puzzle);
         this.depth =depth;
     }
+    /**Getters---------------------------------------------------------*/
+    public int getID() {
+        return ID;
+    }
+
+    public int getDepth() {
+        return depth;
+    }
     public State getState() {
         return state;
     }
     public int getSize() {
         return size;
     }
+
+    public boolean isVisited() {
+        return !visited;
+    }
+
+    public int[][] getPuzzle() {
+        return puzzle;
+    }
+
+    public Costs getCosts_for_AStar() {
+        return costs_for_AStar;
+    }
+
+    public Point getEmpty_point() {
+        return empty_point;
+    }
+    /**--------------------------------------------------------------------------*/
+    /**Setters---------------------------------------------------------*/
+
     public void setSize(int size) {
         this.size = size;
     }
-
     public void setDepth(int depth) {
         this.depth = depth;
-    }
-
-    public boolean isVisited() {
-        return visited;
     }
 
     public void setState(State state) {
         this.state = state;
     }
 
-    public Costs getCosts_for_AStar() {
-        return costs_for_AStar;
-    }
     public void setCosts_for_AStar(Costs costs_for_AStar) {
         this.costs_for_AStar = costs_for_AStar;
     }
@@ -121,10 +131,6 @@ public class Node {
         this.ID = ID;
     }
 
-    public int[][] getPuzzle() {
-        return puzzle;
-    }
-
     public void setPuzzle(int[][] puzzle) {
         this.puzzle = puzzle;
         //After we're setting the puzzle, we initialize the state and the costs
@@ -135,12 +141,9 @@ public class Node {
     public void setEmpty_point(Point empty_point) {
         this.empty_point = empty_point;
     }
+    /**--------------------------------------------------------------------------*/
 
-    public Point getEmpty_point() {
-        return empty_point;
-    }
-    //Function that gives you a chance to build your own node.
-    private void initialPuzzle(){
+    private void initial_Random_Puzzle(){
         Scanner scanner = new Scanner(System.in);
         Set<Integer> numSet = new HashSet();
         String output ="" ;
@@ -187,10 +190,9 @@ public class Node {
         state.print();
     }
 
-
-
-    public int getID() {
-        return ID;
+    @Override
+    public String toString() {
+        return state.getPuzzleRepresentation();
     }
 
 }

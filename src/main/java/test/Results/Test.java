@@ -35,6 +35,35 @@ public class Test extends Tests{
         this.graphs_idx  = new AtomicInteger(0);
     }
 
+    private String[] get_algorithm_names() {
+        // Getting the first element to get the algorithm names
+        RunTimeTest runTimeTest = tests.peek();
+        int size = runTimeTest.getAlgorithms().length;
+        String[] names = new String[size];
+        int i = 0;
+        //Getting all the names
+        for (Algorithms algorithm : runTimeTest.getAlgorithms()) {
+            names[i] = algorithm.Name();
+            i++;
+        }
+        return names;
+    }
+
+    private Algorithms[] get_algorithms() {
+        return tests.peek().getAlgorithms();
+    }
+
+    @Override
+    public void run_tests(int graph_size,int num_of_samples , int n) {
+        boolean res = false;
+        do {
+            try {
+                res = single_test(n, graph_size);
+            } catch (NullPointerException e) {}
+        }while(!res);
+        System.out.println("Graph number " + (graphs_idx.getAndIncrement() + 1) + " successfully created. ");
+    }
+
     public boolean single_test(int n, int graph_size) {
         /**
          * This Function represents 1 step in the test of the project,
@@ -78,73 +107,18 @@ public class Test extends Tests{
         return rand_node;
     }
 
+    //Get 5 samples and visualize the results
     @Override
-    public void run_tests(int graph_size,int num_of_samples , int n) {
-        boolean res = false;
-        do {
-            try {
-                 res = single_test(n, graph_size);
-            } catch (NullPointerException e) {}
-        }while(!res);
-        System.out.println("Graph number " + (graphs_idx.getAndIncrement() + 1) + " successfully created. ");
+    public void get_samples_table(){
+        this.table= new SampleTerminalTable(tests.stream().toList());
+        super.setTable(this.table);
     }
-
-
 
     public void clear() {
         this.table=null;
         this.tests = new ArrayBlockingQueue<>(200);
         this.graphs_idx.set(0);
         this.nodes.clear();
-    }
-    @Override
-    public void menu_for_showing_results(){
-        Scanner scanner = new Scanner(System.in);
-        boolean stop = false;
-        String choice = " ";
-        List<RunTimeTest> tests_elements = new ArrayList<>(tests);
-        while (!stop){
-            System.out.println("Choose your option : ");
-            System.out.println("(1) Show results by sample id (Note: in this case, the id's is between 1-"+tests_elements.size()+"." );
-            System.out.println("(2) Exit.");
-            choice = scanner.nextLine();
-            switch (choice){
-                case "1":
-                    int id=0;
-                    System.out.println("Generate an id for you?");
-                    choice= scanner.nextLine();
-                    if(choice.equals("yes") || choice.equals("Yes")){
-                        Random r = new Random();
-                        id = Math.abs(r.nextInt())%tests_elements.size();
-                        System.out.println("ID is : " + id);
-                    }
-                    else{
-                        System.out.println("Choose your id: ");
-                        id = scanner.nextInt();
-                    }
-                    System.out.println("Result: ");
-                    System.out.println(tests_elements.get(id).toString());
-                    break;
-                case "2":
-                    stop = true;
-                    break;
-                default:
-                    System.out.println("Try again");
-                    break;
-            }
-        }
-
-    }
-
-
-    @Override
-    public String toString() {
-        return "Test{" +
-                "nodes=" + nodes +
-                ", tests=" + tests +
-                ", graphs_idx=" + graphs_idx +
-                ", table=" + table +
-                '}';
     }
 
     @Override
@@ -183,11 +157,8 @@ public class Test extends Tests{
         super.setTable(this.table);
     }
 
-    private Algorithms[] get_algorithms() {
-        return tests.peek().getAlgorithms();
-    }
-
     //Create an instance of the table class and visualize the results
+
     @Override
     public void visualize_results(){
             String[] headers = get_algorithm_names();
@@ -198,29 +169,57 @@ public class Test extends Tests{
             }
 
             this.table.generate_table();
-            print_table();
+            print_table(); // An abstract function in Tests
     }
 
-    private String[] get_algorithm_names() {
-        // Getting the first element to get the algorithm names
-        RunTimeTest runTimeTest = tests.peek();
-        int size = runTimeTest.getAlgorithms().length;
-        String[] names = new String[size];
-        int i = 0;
-        //Getting all the names
-        for (Algorithms algorithm : runTimeTest.getAlgorithms()) {
-            names[i] = algorithm.Name();
-            i++;
-        }
-        return names;
-    }
-
-    //Get 5 samples and visualize the results
     @Override
-    public void get_samples_table(){
-        this.table= new SampleTerminalTable(tests.stream().toList());
-        super.setTable(this.table);
+    public void menu_for_showing_results(){
+        Scanner scanner = new Scanner(System.in);
+        boolean stop = false;
+        String choice = " ";
+        List<RunTimeTest> tests_elements = new ArrayList<>(tests);
+
+        while (!stop){
+            System.out.println("Choose your option : ");
+            System.out.println("(1) Show results by sample id (Note: in this case, the id's is between 1-"+tests_elements.size()+"." );
+            System.out.println("(2) Exit.");
+            choice = scanner.nextLine();
+            switch (choice){
+                case "1":
+                    int id=0;
+                    System.out.println("Generate an id for you?");
+                    choice= scanner.nextLine();
+                    if(choice.equals("yes") || choice.equals("Yes")){
+                        Random r = new Random();
+                        id = Math.abs(r.nextInt())%tests_elements.size();
+                        System.out.println("ID is : " + id);
+                    }
+                    else{
+                        System.out.println("Choose your id: ");
+                        id = scanner.nextInt();
+                    }
+                    System.out.println("Result: ");
+                    System.out.println(tests_elements.get(id).toString());
+                    break;
+                case "2":
+                    stop = true;
+                    break;
+                default:
+                    System.out.println("Try again");
+                    break;
+            }
+        }
+
     }
 
+    @Override
+    public String toString() {
+        return "Test{" +
+                "nodes=" + nodes +
+                ", tests=" + tests +
+                ", graphs_idx=" + graphs_idx +
+                ", table=" + table +
+                '}';
+    }
 
 }

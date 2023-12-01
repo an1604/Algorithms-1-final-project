@@ -23,7 +23,7 @@ public class SampleTerminalTable implements Table {
 
     public SampleTerminalTable(List<RunTimeTest> samples) {
         this.map = new HashMap<>();
-        this.headers = getHeaders(samples);
+        this.headers = get_headers_names(samples);
         this.rows = new ArrayList<>();
         // Generate the rows
         for (RunTimeTest row : samples) {
@@ -34,8 +34,7 @@ public class SampleTerminalTable implements Table {
         }
     }
 
-    // This method returns the headers from a single table
-    private List<String> getHeaders(List<RunTimeTest> samples) {
+    private List<String> get_headers_names(List<RunTimeTest> samples) {
         List<String> names = new ArrayList<>();
         names.add("Sample");
         for (Algorithms a : samples.get(0).getAlgorithms()) {
@@ -48,35 +47,6 @@ public class SampleTerminalTable implements Table {
     @Override
     public List<String[]> getRows() {
         return rows;
-    }
-
-    @Override
-    public int[] calculateColumnWidths() {
-        int numColumns = headers.size();
-        int[] columnWidths = new int[numColumns];
-
-        // Initialize with header lengths
-        for (int i = 0; i < numColumns; i++) {
-            columnWidths[i] = headers.get(i).length();
-        }
-
-        // Update with row lengths
-        for (String[] rowData : rows) {
-            for (int i = 0; i < numColumns; i++) {
-                try {
-                    if (rowData[i].length() > columnWidths[i]) {
-                        columnWidths[i] = rowData[i].length();
-                    }
-                } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {}
-            }
-        }
-
-        return columnWidths;
-    }
-
-    @Override
-    public void generate_table() {
-        // TODO: Implement if needed
     }
 
     @Override
@@ -127,22 +97,30 @@ public class SampleTerminalTable implements Table {
         }
     }
 
+    @Override
+    public int[] calculateColumnWidths() {
+        int numColumns = headers.size();
+        int[] columnWidths = new int[numColumns];
 
-    private String[] get_row_from_map(int rowIndex) {
-        String[] row = new String[this.map.keySet().size()];
-        try {
-            int i = 0;
-            //From each key we get 1 element and append him to the row
-            for (String key : map.keySet()) {
-                //We want the results to be in the order of the headers
-                row[i] = map.get(headers.get(i + 1)).get(rowIndex).getData();
-                i++;
-            }
-        }catch (IndexOutOfBoundsException e){
-            row=null;
+        // Initialize with header lengths
+        for (int i = 0; i < numColumns; i++) {
+            columnWidths[i] = headers.get(i).length();
         }
-        return row;
+
+        // Update with row lengths
+        for (String[] rowData : rows) {
+            for (int i = 0; i < numColumns; i++) {
+                try {
+                    if (rowData[i].length() > columnWidths[i]) {
+                        columnWidths[i] = rowData[i].length();
+                    }
+                } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {}
+            }
+        }
+
+        return columnWidths;
     }
+
 
     @Override
     public void parseRowString(String input ) {
@@ -180,4 +158,25 @@ public class SampleTerminalTable implements Table {
         }
     }
 
+    private String[] get_row_from_map(int rowIndex) {
+        String[] row = new String[this.map.keySet().size()];
+        try {
+            int i = 0;
+            //From each key we get 1 element and append him to the row
+            for (String key : map.keySet()) {
+                //We want the results to be in the order of the headers
+                row[i] = map.get(headers.get(i + 1)).get(rowIndex).getData();
+                i++;
+            }
+        }catch (IndexOutOfBoundsException e){
+            row=null;
+        }
+        return row;
+    }
+
+
+    @Override
+    public void generate_table() {
+        // TODO: Implement if needed
+    }
 }
