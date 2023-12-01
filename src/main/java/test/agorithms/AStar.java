@@ -61,7 +61,7 @@ public class AStar implements Algorithms{
         if(!visited.isEmpty())
             visited.clear();
 
-        graph.set_visited(false);
+        graph.set_visited_field(false);
 
         Queue<Node> queue = new LinkedList<>();
         start_node.setVisited(true);

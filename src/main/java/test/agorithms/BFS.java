@@ -39,7 +39,7 @@ public class BFS implements Algorithms{
         if(single_run)
             System.out.println("BFS is running...");
         //Clearing the visited area
-        graph.set_visited(false);
+        graph.set_visited_field(false);
 
         Queue<Node> queue = new LinkedList<>();
         queue.add(this.start_node);
