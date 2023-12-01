@@ -25,6 +25,8 @@ public class RegulaerState extends State{
     }
     @Override
     public boolean isGoalState() {
-        return FinishState.getFinishState(this.size).puzzleRepresentation.replaceAll("\\s", "").equals(this.puzzleRepresentation.replaceAll("\\s", ""));
+        return FinishState.getFinishState(this.size).puzzleRepresentation.
+                replaceAll("\\s", "").equals(this.puzzleRepresentation.
+                        replaceAll("\\s", ""));
     }
 }

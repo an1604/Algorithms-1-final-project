@@ -1,8 +1,7 @@
 package test.States;
 
 public class FinishState extends State {
-    // Singleton
-    static FinishState finishState= null;
+    static FinishState finishState= null; // Singleton
 
     public static FinishState getFinishState(int size) {
         if(finishState==null){
@@ -15,21 +14,6 @@ public class FinishState extends State {
         super(size, initializeFinalStateArray(size));
         setPuzzleRepresentation(initializeFinalStateString(size));
     }
-
-    @Override
-    public void setPuzzleRepresentation(String puzzleRepresentation) {
-        this.puzzleRepresentation = puzzleRepresentation;
-    }
-
-    @Override
-    public boolean isGoalState() {
-        return true;
-    }
-
-    public static int getSize() {
-        return size;
-    }
-
 
     private static String initializeFinalStateString(int size) {
         StringBuilder sb = new StringBuilder();
@@ -68,4 +52,19 @@ public class FinishState extends State {
 
         return finalState;
     }
+
+    @Override
+    public void setPuzzleRepresentation(String puzzleRepresentation) {
+        this.puzzleRepresentation = puzzleRepresentation;
+    }
+
+    @Override
+    public boolean isGoalState() {
+        return true;
+    }
+
+    public static int getSize() {
+        return size;
+    }
+
 }

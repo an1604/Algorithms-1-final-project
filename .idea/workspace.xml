@@ -7,10 +7,14 @@
     <list default="true" id="e36ea065-6b42-4b95-88dc-065f797cf7f5" name="Changes" comment="Final commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/test/Results/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Results/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Results/Tests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Results/Tests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/States/FinishState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/States/FinishState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/States/RegulaerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/States/RegulaerState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/Table/AverageTerminalTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Table/AverageTerminalTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/Table/SampleTerminalTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Table/SampleTerminalTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/test/agorithms/AStar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/agorithms/AStar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/agorithms/BFS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/agorithms/BFS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/test/components/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/components/Graph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/components/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/components/Node.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +202,7 @@
       <workItem from="1700114574288" duration="23840000" />
       <workItem from="1700155160087" duration="17214000" />
       <workItem from="1700478690290" duration="2101000" />
-      <workItem from="1700934444546" duration="5612000" />
+      <workItem from="1700934444546" duration="13662000" />
     </task>
     <task id="LOCAL‎-00001" summary="new commit">
       <option name="closed" value="true" />
@@ -368,7 +372,31 @@
       <option name="project" value="LOCAL‎" />
       <updated>1700935951910</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL‎-00022" summary="Final commit">
+      <option name="closed" value="true" />
+      <created>1701023478855</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL‎-00022" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1701023478855</updated>
+    </task>
+    <task id="LOCAL‎-00023" summary="Final commit">
+      <option name="closed" value="true" />
+      <created>1701103570247</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL‎-00023" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1701103570247</updated>
+    </task>
+    <task id="LOCAL‎-00024" summary="Final commit">
+      <option name="closed" value="true" />
+      <created>1701450339453</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL‎-00024" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1701450339453</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -388,11 +416,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/test/Part_D/AStar.java</url>
           <line>119</line>
           <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/test/main/Main.java</url>
-          <line>119</line>
-          <option name="timeStamp" value="49" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

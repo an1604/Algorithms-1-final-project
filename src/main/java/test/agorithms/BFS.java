@@ -39,7 +39,7 @@ public class BFS implements Algorithms{
         if(single_run)
             System.out.println("BFS is running...");
         //Clearing the visited area
-        graph.set_visited(false);
+        graph.set_visited_field(false);
 
         Queue<Node> queue = new LinkedList<>();
         queue.add(this.start_node);
@@ -47,7 +47,7 @@ public class BFS implements Algorithms{
             try {
                 Node current = queue.poll();
                 // Avoiding cycles
-                if (!current.isVisited()) {
+                if (current.isVisited()) {
                     current.setVisited(true);
                     // If the current node matches the final state, print the path and exit
                     if (current.getState().isGoalState()) {
@@ -60,7 +60,7 @@ public class BFS implements Algorithms{
                     // Enqueue unvisited neighbors and update parentMap
                     for (Node neighbor : graph.getNeighbors(current.getID())) {
                         //Checking if the node is visited or not
-                        if (!neighbor.isVisited()) {
+                        if (neighbor.isVisited()) {
                             //Updating the Q and the Parent Map to make sure where this node came from
                             queue.add(neighbor);
                             parentMap.put(neighbor.getID(), current.getID());

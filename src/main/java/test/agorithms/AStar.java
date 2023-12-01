@@ -18,7 +18,7 @@ public class AStar implements Algorithms{
     private final Graph graph;
 
     private Set<Integer> visited;
-    private List<Node> path;
+    private List<Node> traverse_path;
     private boolean path_found;
     private String name; // The alg name
     private boolean single_run;
@@ -28,7 +28,7 @@ public class AStar implements Algorithms{
         this.graph = graph;
         this.prompt = prompt;
         this.visited= new HashSet<>();
-        this.path = new ArrayList<>();
+        this.traverse_path = new ArrayList<>();
         this.path_found= false;
         this.name = build_algorithm_name_from_prompt();
         this.single_run = single_run;
@@ -58,90 +58,90 @@ public class AStar implements Algorithms{
     public void traverse(){
         if(single_run)
             System.out.println(this.name + " is running...");
-        if(!visited.isEmpty())
-            visited.clear();
 
-        graph.set_visited(false);
+        clear_visited_field();
 
         Queue<Node> queue = new LinkedList<>();
-        start_node.setVisited(true);
 
-        //Initialize g(n) to 0 in the start node (we already in the initial node)
-        try {
-            start_node.getCosts_for_AStar().setG_n(0);
-        }catch (NullPointerException e){
-            e.printStackTrace();
-            initialize_costs_for_start_node();
-        }
+        initialize_costs_for_start_node();
 
-        //Calculate f(n) for the start node
-        if(!start_node.getCosts_for_AStar().isCalculated())
-            get_cost(start_node);
         queue.add(start_node);
         Node current_node =null;
+
         if (single_run) {
             System.out.println("Initial state is: ");
             start_node.print_puzzle();
         }
 
-
-        while( !this.path_found){
+        while( !this.path_found) {
             //Pooling the node from the Q and append the node to the path list
-            try {
-                current_node = queue.poll();
-            } catch (NullPointerException e){
-                e.printStackTrace();
-                continue;
+            current_node = get_current_node_from_Q(queue);
+
+            if (current_node!= null ) {
+                if (current_node.getState().isGoalState()) {
+                    traverse_path.add(current_node);
+                    this.path_found = true;
+                    break;
+                }
+
+                if(!visited_yet(current_node))
+                    traverse_path.add(current_node); // For printing the path at the end
+
+                //Get the neighbors (the states)
+                graph.get_states(current_node);
+                Set<Node> neighbors = graph.getNeighbors(current_node.getID());
+
+                calc_costs_for_neighbors(neighbors);
+
+                Node is_finish_state_node = checking_for_finish_state(neighbors);
+
+                if (is_finish_state_node == null) {
+                    LinkedList<Node> min_nodes = generate_minimum_cost(neighbors);
+
+                    queue.addAll(min_nodes);
+
+                    graph.increase_depth();
+
+                    visited.add(current_node.getID());
+                } else {
+                    traverse_path.add(is_finish_state_node);
+                    this.path_found = true;
+                }
             }
-
-            //Handling the finish state
-            if (current_node.getState().isGoalState()) {
-                path.add(current_node);
-                this.path_found = true;
-                break;
-            }
-
-            //Handle the multiple checking
-             if(visited.contains(current_node.getID()) && single_run) {
-                 System.out.println("This node already exist, we go through this node again. ");
-                 current_node.print_puzzle();
-             }
-             else
-                path.add(current_node); // For printing the path at the end
-
-
-                 //Get the neighbors (the states)
-                 graph.get_states(current_node);
-                 Set<Node> neighbors = graph.getNeighbors(current_node.getID());
-
-                 //Calculate the cost function
-                 calc_costs_for_neighbors(neighbors);
-
-                 Node is_finish_state_node = checking_for_finish_state(neighbors);
-
-                 if(is_finish_state_node==null) {
-                     // Finding the minimum cost function from the neighbors
-                     LinkedList<Node> min_nodes = generate_minimum_cost(neighbors);
-
-                         //If we don't reach the goal, we added all the minimum nodes to the Q
-                         queue.addAll(min_nodes);
-
-                         //Increasing the depth for next iteration
-                         graph.increase_depth();
-
-                         //Adding the node into the set to make sure we not visit her again
-                         visited.add(current_node.getID());
-                 }
-                 else{
-                     path.add(is_finish_state_node);
-                     this.path_found = true;
-                 }
         }
+       check_if_path_founded();
+    }
+
+    private void check_if_path_founded() {
         if(!this.path_found)
             System.out.println("No solution found ...");
         else if(single_run)
             print_path();
+    }
 
+    private boolean visited_yet(Node current_node) {
+        if (visited.contains(current_node.getID()) && single_run) {
+            System.out.println("This node already exist, we go through this node again. ");
+            current_node.print_puzzle();
+            return true;
+        }
+        return false;
+    }
+
+    private void clear_visited_field() {
+        if(!visited.isEmpty())
+            visited.clear();
+        graph.set_visited_field(false);
+        start_node.setVisited(true);
+    }
+
+    private Node get_current_node_from_Q(Queue<Node> queue) {
+        try {
+            return queue.poll();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private Node checking_for_finish_state(Set<Node> neighbors) {
@@ -154,14 +154,22 @@ public class AStar implements Algorithms{
     }
 
     private void initialize_costs_for_start_node() {
-        Costs costs = new Costs(0,start_node.getState());
-        costs.setG_n(0);
-        start_node.setCosts_for_AStar(costs);
+        try {
+            start_node.getCosts_for_AStar().setG_n(0);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+            Costs costs = new Costs(0,start_node.getState());
+            costs.setG_n(0);
+            start_node.setCosts_for_AStar(costs);
+        }
+        //Calculate f(n) for the start node
+        if(!start_node.getCosts_for_AStar().isCalculated())
+            get_cost(start_node);
     }
 
     @Override
     public int num_of_vertices() {
-        return visited.size();
+        return visited.size()+1;
     }
 
     @Override
@@ -176,7 +184,7 @@ public class AStar implements Algorithms{
 
     public void print_path() {
         System.out.println("Solution Found!\n Path: ");
-        path.forEach(node -> node.print_puzzle());
+        traverse_path.forEach(node -> node.print_puzzle());
     }
 
     private void calc_costs_for_neighbors(Set<Node> neighbors) {
@@ -186,7 +194,7 @@ public class AStar implements Algorithms{
                 //Checking if we in the final state...
                 if(neighbor.getCosts_for_AStar().getF_n() == 0){
                     if(neighbor.getState().isGoalState()){
-                        path.add(neighbor);
+                        traverse_path.add(neighbor);
                         this.path_found = true;
                         return;
                     }
@@ -226,8 +234,6 @@ public class AStar implements Algorithms{
 
         return queue;
     }
-
-
 
     private void get_cost(Node neighbor) {
             switch (prompt) {
