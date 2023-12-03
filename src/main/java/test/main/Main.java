@@ -1,5 +1,6 @@
 package test.main;
 
+import test.Multi_Thread.MyExecutorService;
 import test.Multi_Thread.Task;
 import test.Results.Test;
 import test.Results.Tests;
@@ -15,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         // We run the heavy tasks on multi-thread to save time
-        ExecutorService es =  Executors.newFixedThreadPool(3);
+        MyExecutorService myExecutorService = new MyExecutorService(3);
 
         boolean stop = false;
         boolean is_executed = true;
@@ -48,21 +49,15 @@ public class Main {
             // Check his choice
             switch (choice) {
                 case "1":
-                    if(es.isTerminated() || es.isShutdown()){
-                        es = Executors.newFixedThreadPool(3);
-                    }
-                    current_test = start_test(puzzle_size,sample_size,es,n);
-
-
+                    myExecutorService.check_terminated();
+                    current_test = start_test(puzzle_size,sample_size,myExecutorService,n);
                     break;
                 case "2":
-                    if(es.isTerminated() || es.isShutdown()){
-                        es = Executors.newFixedThreadPool(3);
-                    }
+                   myExecutorService.check_terminated();
                     if (sample_size >10)
                         is_executed = false;
                     else
-                       current_test = start_test(puzzle_size,sample_size,es,n);
+                       current_test = start_test(puzzle_size,sample_size,myExecutorService,n);
                     break;
                 case "3":
                   current_test.menu_for_showing_results();
@@ -82,11 +77,7 @@ public class Main {
                     break;
             }
             if(is_executed) {
-                try {
-                    es.awaitTermination(5, TimeUnit.MINUTES);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+               myExecutorService.await_termination();
             }
             else
                 is_executed = true;
@@ -99,13 +90,12 @@ public class Main {
                 current_test.genearge_avarege_run_time_table();
                 current_test.print_table();
             }
-
-
         }
+        myExecutorService.close();
         System.out.println("Done");
     }
 
-    public static Tests start_test(int puzzle_size , int sample_size, ExecutorService es, int num_of_steps ){
+    public static Tests start_test(int puzzle_size , int sample_size, MyExecutorService mes, int num_of_steps ){
         Tests test = null;
         if ((puzzle_size == 15 || puzzle_size == 24)) {
             if (puzzle_size == 15)
@@ -114,10 +104,7 @@ public class Main {
                 puzzle_size = 5;
              test = new Test();
             Task task = new Task(test , puzzle_size,sample_size,num_of_steps);
-            for (int i = 0; i < sample_size; i++) {
-                es.execute(task);
-            }
-            es.shutdown();
+           mes.execute_tasks(sample_size,task);
         }
         return test;
     }

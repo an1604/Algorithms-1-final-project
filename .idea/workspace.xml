@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e36ea065-6b42-4b95-88dc-065f797cf7f5" name="Changes" comment="Final commit">
+      <change afterPath="$PROJECT_DIR$/src/main/java/test/Multi_Thread/MyExecutorService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Results/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Results/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/States/FinishState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/States/FinishState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/States/RegulaerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/States/RegulaerState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Table/AverageTerminalTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Table/AverageTerminalTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Table/SampleTerminalTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Table/SampleTerminalTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/agorithms/AStar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/agorithms/AStar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/agorithms/BFS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/agorithms/BFS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/components/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/components/Graph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/components/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/components/Node.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/main/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,26 +79,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Clean__code",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/adina/Desktop/תקיית_עבודות/עבודת גמר אלגוריתמים/פתמ 2/final_project_algo1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Clean__code&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/adina/Desktop/תקיית_עבודות/עבודת גמר אלגוריתמים/פתמ 2/final_project_algo1&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.test.main.Main">
     <configuration name="DFS" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test.Part_C.DFS" />
@@ -202,7 +195,8 @@
       <workItem from="1700114574288" duration="23840000" />
       <workItem from="1700155160087" duration="17214000" />
       <workItem from="1700478690290" duration="2101000" />
-      <workItem from="1700934444546" duration="13662000" />
+      <workItem from="1700934444546" duration="14019000" />
+      <workItem from="1701625504816" duration="533000" />
     </task>
     <task id="LOCAL‎-00001" summary="new commit">
       <option name="closed" value="true" />
@@ -396,7 +390,15 @@
       <option name="project" value="LOCAL‎" />
       <updated>1701450339453</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL‎-00025" summary="Final commit">
+      <option name="closed" value="true" />
+      <created>1701451906107</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL‎-00025" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1701451906107</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
