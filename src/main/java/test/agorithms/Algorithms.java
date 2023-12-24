@@ -3,6 +3,8 @@ package test.agorithms;
 import test.components.Node;
 
 public interface Algorithms {
+    int getAmount_of_displacement();
+
     /**The Algorithms interface.
      * This interface holds essential methods for all different traversal algorithms,
      * such as traverse, name, and in our specific issue we want to get the number of developed vertices also.

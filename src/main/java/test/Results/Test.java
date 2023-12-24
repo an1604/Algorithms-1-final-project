@@ -1,5 +1,6 @@
 package test.Results;
 
+import test.WordDoc;
 import test.main.Average;
 import test.main.RunTimeTest;
 import test.Table.AverageTerminalTable;
@@ -11,28 +12,49 @@ import test.agorithms.BFS;
 import test.components.Graph;
 import test.components.Node;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-public class Test extends Tests{
-    /**The test class.
+public class Test extends Tests {
+    /**
+     * The test class.
      * We considered a couple of things:
      * nodes (set) - The set of initialization nodes that can be sent to sample each iteration.
      * tests(Q) - The thread safe Q to run each test safely.
-     *graphs_idx (AtomicInteger) - The counter of the samples. */
+     * graphs_idx (AtomicInteger) - The counter of the samples.
+     */
 
-    private  Set<Node> nodes;
-    private  Queue<RunTimeTest> tests;
+    private final Set<String> nodes;
 
-    private  AtomicInteger graphs_idx;
+    private Queue<RunTimeTest> tests;
+
+    private final AtomicInteger graphs_idx;
+
     private Table table;
+    private int puzzle_size;
+    private final WordDoc doc;
 
-    public Test() {
+    public Test(String doc_name) {
         this.nodes = new CopyOnWriteArraySet<>();
         this.tests = new ArrayBlockingQueue<>(200);
-        this.graphs_idx  = new AtomicInteger(0);
+        this.graphs_idx = new AtomicInteger(0);
+        this.puzzle_size = 0;
+        try {
+            this.doc = new WordDoc(doc_name);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Queue<RunTimeTest> getTests() {
+        return tests;
+    }
+
+    public int getPuzzle_size() {
+        return puzzle_size;
     }
 
     public boolean step(int n, int graph_size) {
@@ -46,7 +68,6 @@ public class Test extends Tests{
          The function will return true of all the steps inside go right.
          **/
         try {
-            boolean stop = false;
             //Clearing the graph and then generate him
             Graph graph = new Graph(graph_size);
 
@@ -55,16 +76,16 @@ public class Test extends Tests{
             //Making sure we're getting a unique node each iteration
             Node rand_node = null;
             do {
-                 rand_node = graph.get_random_node();
+                rand_node = graph.get_random_node();
             }
-            while(nodes.contains(rand_node) && rand_node==null);
-            nodes.add(rand_node);
+            while (nodes.contains(rand_node.getState().getPuzzleRepresentation()));
+            nodes.add(rand_node.getState().getPuzzleRepresentation());
 
             //Initialize the algorithms
-            BFS bfs = new BFS(rand_node, graph,false);
+            BFS bfs = new BFS(rand_node, graph, false);
             AStar manhattan = new AStar(rand_node, graph, "M", false);
-            AStar dijkstra = new AStar(rand_node, graph, "D",false);
-            AStar greedy_bfs = new AStar(rand_node, graph, " ",false);
+            AStar dijkstra = new AStar(rand_node, graph, "D", false);
+            AStar greedy_bfs = new AStar(rand_node, graph, " ", false);
             //Sample the run time foreach
             RunTimeTest runTimeTest = new RunTimeTest(manhattan, dijkstra, bfs, greedy_bfs);
             runTimeTest.test();
@@ -74,47 +95,49 @@ public class Test extends Tests{
         }
         return true;
     }
+
     @Override
-    public void run_tests(int graph_size,int num_of_samples , int n) {
+    public void run_tests(int graph_size, int num_of_samples, int n) {
         boolean res = false;
+        this.puzzle_size = graph_size;
         do {
             try {
-                 res = step(n, graph_size);
-            } catch (NullPointerException e) {}
-        }while(!res);
-        System.out.println("Graph number " + (graphs_idx.getAndIncrement() + 1) + " successfully created. ");
+                res = step(n, graph_size);
+            } catch (NullPointerException ignored) {
+            }
+        } while (!res);
+        System.out.println("Sample number " + (graphs_idx.getAndIncrement() + 1) + " successfully created. ");
     }
 
 
-
     public void clear() {
-        this.table=null;
+        this.table = null;
         this.tests = new ArrayBlockingQueue<>(200);
         this.graphs_idx.set(0);
         this.nodes.clear();
     }
+
     @Override
-    public  void print_results(){
+    public void print_results() {
         Scanner scanner = new Scanner(System.in);
         boolean stop = false;
         String choice = " ";
         List<RunTimeTest> tests_elements = new ArrayList<>(tests);
-        while (!stop){
+        while (!stop) {
             System.out.println("Choose your option : ");
-            System.out.println("(1) Show results by sample id (Note: in this case, the id's is between 1-"+tests_elements.size()+"." );
+            System.out.println("(1) Show results by sample id (Note: in this case, the id's is between 1-" + tests_elements.size() + ".");
             System.out.println("(2) Exit.");
             choice = scanner.nextLine();
-            switch (choice){
+            switch (choice) {
                 case "1":
-                    int id=0;
+                    int id = 0;
                     System.out.println("Generate an id for you?");
-                    choice= scanner.nextLine();
-                    if(choice.equals("yes") || choice.equals("Yes")){
+                    choice = scanner.nextLine();
+                    if (choice.equals("yes") || choice.equals("Yes")) {
                         Random r = new Random();
-                        id = Math.abs(r.nextInt())%tests_elements.size();
+                        id = Math.abs(r.nextInt()) % tests_elements.size();
                         System.out.println("ID is : " + id);
-                    }
-                    else{
+                    } else {
                         System.out.println("Choose your id: ");
                         id = scanner.nextInt();
                     }
@@ -145,34 +168,38 @@ public class Test extends Tests{
 
     @Override
     public void get_avg_and_visualize_results() {
-        Algorithms[] algorithms =get_algorithms();
+        Algorithms[] algorithms = get_algorithms();
         Map<String, Average> map = new HashMap<>();
         //Getting all the Algorithms and map them with average instance
-        for(Algorithms algorithm : algorithms){
-            map.put(algorithm.Name() , new Average(algorithm));
+        for (Algorithms algorithm : algorithms) {
+            map.put(algorithm.Name(), new Average(algorithm));
         }
 
         //Commute the averages
-        for (RunTimeTest test : tests){
-            for(Algorithms algorithm : test.getAlgorithms()){
+        for (RunTimeTest test : tests) {
+            for (Algorithms algorithm : test.getAlgorithms()) {
                 try {
                     Average a = map.get(algorithm.Name());
                     //Run time
                     a.setRun_time_avg(test.getRun_times().get(algorithm));
                     //Vertices
                     a.setVertices_avg(algorithm.num_of_vertices());
-                } catch (NullPointerException e){e.printStackTrace();}
+                    // the amount of displacement
+                    a.setAmount_of_displacement(algorithm.getAmount_of_displacement());
+
+                } catch (NullPointerException ignored) {
+                }
             }
         }
 
-        for(Average average : map.values()){
+        for (Average average : map.values()) {
             average.compute(tests.size());
         }
 
         //Visualize part
         String[] names = get_names();
-        this.table = new AverageTerminalTable(names,tests.size());
-        for(Average average : map.values()){
+        this.table = new AverageTerminalTable(names, tests.size());
+        for (Average average : map.values()) {
             this.table.parseRowString(average.toString());
         }
         this.table.generate_table();
@@ -180,27 +207,29 @@ public class Test extends Tests{
     }
 
     private Algorithms[] get_algorithms() {
+        assert tests.peek() != null;
         return tests.peek().getAlgorithms();
     }
 
     //Create an instance of the table class and visualize the results
     @Override
-    public void visualize_results(){
-            String[] headers = get_names();
-            this.table = new AverageTerminalTable(headers, tests.size());
+    public void visualize_results() {
+        String[] headers = get_names();
+        this.table = new AverageTerminalTable(headers, tests.size());
 
-            for(RunTimeTest test:tests){
-                this.table.parseRowString(test.toString());
-            }
+        for (RunTimeTest test : tests) {
+            this.table.parseRowString(test.toString());
+        }
 
-            this.table.generate_table();
+        this.table.generate_table();
 
-            this.table.printTable();
+        this.table.printTable();
     }
 
     private String[] get_names() {
         // Getting the first element to get the algorithm names
         RunTimeTest runTimeTest = tests.peek();
+        assert runTimeTest != null;
         int size = runTimeTest.getAlgorithms().length;
         String[] names = new String[size];
         int i = 0;
@@ -214,9 +243,72 @@ public class Test extends Tests{
 
     //Get 5 samples and visualize the results
     @Override
-    public void get_samples_table(){
+    public void get_samples_table() {
         Table sample_table = new SampleTerminalTable(tests.stream().toList());
         sample_table.printTable();
+    }
+
+    @Override
+    public void create_Word_doc_for_little_sample(String[] headers) {
+        doc.setHeaders(headers);
+        doc.create_table_for_little_sample(this);
+        doc.write_table_into_document();
+    }
+
+    @Override
+     public void create_Word_doc_for_big_sample(){
+       String[] headers = get_headers();
+        doc.setHeaders(headers);
+        doc.create_table_for_big_sample(this);
+        doc.write_table_into_document();
+    }
+
+    private String[] get_headers() {
+        String[] headers = get_names();
+        int len = headers.length + 2;
+        String[] res = new String[len];
+        res[0] = "Sample";
+        res[1] = "Initial node";
+        System.arraycopy(headers, 0, res, 2, len - 2);
+        return res;
+    }
+
+    @Override
+    public void menu_for_showing_results() {
+        Scanner scanner = new Scanner(System.in);
+        boolean stop = false;
+        String choice = " ";
+        List<RunTimeTest> tests_elements = new ArrayList<>(tests);
+
+        while (!stop) {
+            System.out.println("Choose your option : ");
+            System.out.println("(1) Show results by sample id (Note: in this case, the id's is between 1-" + tests_elements.size() + ".");
+            System.out.println("(2) Exit.");
+            choice = scanner.nextLine();
+            switch (choice) {
+                case "1":
+                    int id = 0;
+                    System.out.println("Generate an id for you?");
+                    choice = scanner.nextLine();
+                    if (choice.equals("yes") || choice.equals("Yes")) {
+                        Random r = new Random();
+                        id = Math.abs(r.nextInt()) % tests_elements.size();
+                        System.out.println("ID is : " + id);
+                    } else {
+                        System.out.println("Choose your id: ");
+                        id = scanner.nextInt();
+                    }
+                    System.out.println("Result: ");
+                    System.out.println(tests_elements.get(id).toString());
+                    break;
+                case "2":
+                    stop = true;
+                    break;
+                default:
+                    System.out.println("Try again");
+                    break;
+            }
+        }
     }
 
 

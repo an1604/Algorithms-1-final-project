@@ -6,9 +6,10 @@ import test.components.Node;
 
 import java.util.*;
 
-public class AStar implements Algorithms{
+public class AStar implements Algorithms {
 
-    /**In this class, we consider a couple of things:
+    /**
+     * In this class, we consider a couple of things:
      * Initialization: We get the graph to compute the search on.
      * We get the prompt for the heuristic function.
      * And we get the starting node to move on from.
@@ -17,25 +18,31 @@ public class AStar implements Algorithms{
     private final Node start_node;
     private final Graph graph;
 
-    private Set<Integer> visited;
-    private List<Node> path;
+    private final Set<Integer> visited;
+    private final List<Node> path;
     private boolean path_found;
-    private String name; // The alg name
-    private boolean single_run;
+    private final String name; // The alg name
+    private final boolean single_run;
+    private final Set<Node> amount_of_displacement;
 
-    public AStar(Node start_node, Graph graph ,String prompt, boolean single_run) {
+    public AStar(Node start_node, Graph graph, String prompt, boolean single_run) {
         this.start_node = start_node;
         this.graph = graph;
         this.prompt = prompt;
-        this.visited= new HashSet<>();
+        this.visited = new HashSet<>();
         this.path = new ArrayList<>();
-        this.path_found= false;
+        this.path_found = false;
         this.name = check_for_name();
         this.single_run = single_run;
+        this.amount_of_displacement = new HashSet<>();
+    }
+    @Override
+    public int getAmount_of_displacement() {
+        return amount_of_displacement.size();
     }
 
     private String check_for_name() {
-        StringBuilder sb =new StringBuilder("A star");
+        StringBuilder sb = new StringBuilder("A star");
         switch (prompt) {
             case "M":
                 sb.append(" Manhattan heuristic");
@@ -54,24 +61,25 @@ public class AStar implements Algorithms{
     public String getPrompt() {
         return prompt;
     }
+
     @Override
-    public void traverse(){
-        if(single_run)
+    public void traverse() {
+        if (single_run)
             System.out.println(this.name + " is running...");
-        if(!visited.isEmpty())
-            visited.clear();
 
         graph.set_visited(false);
 
         Queue<Node> queue = new LinkedList<>();
         start_node.setVisited(true);
+        visited.add(start_node.getID());
+        amount_of_displacement.add(start_node);
 
         //Initialize g(n) to 0 in the start node (we already in the initial node)
         try {
             start_node.getCosts_for_AStar().setG_n(0);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
-            Costs costs = new Costs(0,start_node.getState());
+            Costs costs = new Costs(0, start_node.getState());
             costs.setG_n(0);
             start_node.setCosts_for_AStar(costs);
         }
@@ -79,18 +87,18 @@ public class AStar implements Algorithms{
         //Calculate f(n) for the start node
         get_cost(start_node);
         queue.add(start_node);
-        Node current_node =null;
+        Node current_node = null;
         if (single_run) {
             System.out.println("Initial state is: ");
             start_node.print_puzzle();
         }
 
 
-        while( !this.path_found){
+        while (!this.path_found) {
             //Pooling the node from the Q and append the node to the path list
             try {
                 current_node = queue.poll();
-            } catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 continue;
             }
@@ -103,45 +111,45 @@ public class AStar implements Algorithms{
             }
 
             //Handle the multiple checking
-             if(visited.contains(current_node.getID()) && single_run) {
-                 System.out.println("This node already exist, we go through this node again. ");
-                 current_node.print_puzzle();
-             }
-             else
+            if (visited.contains(current_node.getID()) && single_run) {
+                System.out.println("This node already exist, we go through this node again. ");
+                current_node.print_puzzle();
+            } else
                 path.add(current_node); // For printing the path at the end
 
 
-                 //Get the neighbors (the states)
-                 graph.get_states(current_node);
-                 Set<Node> neighbors = graph.getNeighbors(current_node.getID());
+            //Get the neighbors (the states)
+            graph.get_states(current_node);
+            Set<Node> neighbors = graph.getNeighbors(current_node.getID());
+            amount_of_displacement.addAll(neighbors);
 
-                 //Calculate the cost function
-                 calc_costs_for_neighbors(neighbors);
+            //Calculate the cost function
+            calc_costs_for_neighbors(neighbors);
 
-                 if(!this.path_found) {
-                     // Finding the minimum cost function from the neighbors
-                     LinkedList<Node> min_nodes = generate_minimum_cost(neighbors);
+            if (!this.path_found) {
+                // Finding the minimum cost function from the neighbors
+                LinkedList<Node> min_nodes = get_minimum_cost(neighbors);
 
-                         //If we don't reach the goal, we added all the minimum nodes to the Q
-                         queue.addAll(min_nodes);
+                //If we don't reach the goal, we added all the minimum nodes to the Q
+                queue.addAll(min_nodes);
 
-                         //Increasing the depth for next iteration
-                         graph.increase_depth();
+                //Increasing the depth for next iteration
+                graph.increase_depth();
 
-                         //Adding the node into the set to make sure we not visit her again
-                         visited.add(current_node.getID());
-                 }
+                //Adding the node into the set to make sure we not visit her again
+                visited.add(current_node.getID());
+            }
         }
-        if(!this.path_found)
+        if (!this.path_found)
             System.out.println("No solution found ...");
-        else if(single_run)
+        else if (single_run)
             print_path();
 
     }
 
     @Override
     public int num_of_vertices() {
-        return visited.size();
+        return path.size();
     }
 
     @Override
@@ -160,20 +168,20 @@ public class AStar implements Algorithms{
     }
 
     private void calc_costs_for_neighbors(Set<Node> neighbors) {
-        for(Node neighbor : neighbors){
-                get_cost(neighbor);
-                //Checking if we in the final state...
-                if(neighbor.getCosts_for_AStar().getF_n() == 0){
-                    if(neighbor.getState().isGoalState()){
-                        path.add(neighbor);
-                        this.path_found = true;
-                        return;
-                    }
+        for (Node neighbor : neighbors) {
+            get_cost(neighbor);
+            //Checking if we in the final state...
+            if (neighbor.getCosts_for_AStar().getF_n() == 0) {
+                if (neighbor.getState().isGoalState()) {
+                    path.add(neighbor);
+                    this.path_found = true;
+                    return;
                 }
+            }
         }
     }
 
-    private LinkedList<Node> generate_minimum_cost(Set<Node> neighbors) {
+    private LinkedList<Node> get_minimum_cost(Set<Node> neighbors) {
         int min_cost = Integer.MAX_VALUE;
         LinkedList<Node> queue = new LinkedList<>();
         Node min_node = !neighbors.isEmpty() ? neighbors.iterator().next() : null;
@@ -207,9 +215,8 @@ public class AStar implements Algorithms{
     }
 
 
-
     private void get_cost(Node neighbor) {
-        if(!neighbor.getCosts_for_AStar().isCalculated()) {
+        if (!neighbor.getCosts_for_AStar().isCalculated()) {
             switch (prompt) {
                 case "M":
                     neighbor.getCosts_for_AStar().get_Manhattan_costs();

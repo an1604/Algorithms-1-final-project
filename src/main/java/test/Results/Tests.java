@@ -80,4 +80,9 @@ public abstract class Tests {
 
     //Get 5 samples and visualize the results
     public abstract void get_samples_table();
+    public abstract void create_Word_doc_for_little_sample(String[] headers);
+
+    public abstract void create_Word_doc_for_big_sample();
+
+    public abstract void menu_for_showing_results();
 }

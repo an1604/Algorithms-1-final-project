@@ -5,38 +5,46 @@ import test.components.Node;
 
 import java.util.*;
 
-public class BFS implements Algorithms{
-    /**The BFS class.
+public class BFS implements Algorithms {
+    /**
+     * The BFS class.
      * This class represents the breadth-first search algorithm.
      * We considered a couple of things:
      * start_node (Node) - The initial node to move on from.
      * graph (Graph) - The Graph that we searched on.
      * parentMap (Map<Integer, Integer>) -  Map to store parent-child relationship.
      * num_of_vertices (int) - Number of developed vertices.
-     * */
+     */
     private final Node start_node;
-    private boolean single_run;
+    private final boolean single_run;
 
     private final Graph graph;
 
-    private Map<Integer, Integer> parentMap;
-    private int num_of_vertices;
+    private final Map<Integer, Integer> parentMap;
+    private List<Integer> final_path;
+
     public BFS(Node startNode, Graph graph, boolean single_run) {
         this.single_run = single_run;
         this.start_node = startNode;
         this.graph = graph;
 
         this.parentMap = new HashMap<>();
-        this.num_of_vertices = Integer.MIN_VALUE;
+        this.final_path = new ArrayList<>();
     }
+
     @Override
     public Node getStart_node() {
         return start_node;
     }
 
     @Override
+    public int getAmount_of_displacement() {
+        return parentMap.size();
+    }
+
+    @Override
     public void traverse() {
-        if(single_run)
+        if (single_run)
             System.out.println("BFS is running...");
         //Clearing the visited area
         graph.set_visited(false);
@@ -51,7 +59,8 @@ public class BFS implements Algorithms{
                     current.setVisited(true);
                     // If the current node matches the final state, print the path and exit
                     if (current.getState().isGoalState()) {
-                        if(single_run)
+                        this.final_path = get_path(current);
+                        if (single_run)
                             printPath(current);
                         return;
                     }
@@ -68,8 +77,7 @@ public class BFS implements Algorithms{
 
                     }
                 }
-            } catch (NullPointerException e){
-                e.printStackTrace();
+            } catch (NullPointerException ignored) {
             }
         }
 
@@ -78,9 +86,7 @@ public class BFS implements Algorithms{
 
     @Override
     public int num_of_vertices() {
-        if(num_of_vertices!=Integer.MIN_VALUE)
-            return num_of_vertices;
-        return parentMap.size();
+        return final_path.size() + 1;
     }
 
     @Override
@@ -91,6 +97,15 @@ public class BFS implements Algorithms{
 
     private void printPath(Node current) {
         System.out.println("Solution found! Printing the path:");
+        final_path = get_path(current);
+        // Print the path in reverse order (from start to end)
+        Collections.reverse(final_path);
+        for (Integer nodeID : final_path) {
+            graph.getNodeByID(nodeID).print_puzzle();
+        }
+    }
+
+    private List<Integer> get_path(Node current) {
         List<Integer> path = new ArrayList<>();
         path.add(current.getID());
 
@@ -100,12 +115,7 @@ public class BFS implements Algorithms{
             path.add(parentID);
             parentID = parentMap.get(parentID);
         }
-        this.num_of_vertices = path.size();
-        // Print the path in reverse order (from start to end)
-        Collections.reverse(path);
-        for (Integer nodeID : path) {
-            graph.getNodeByID(nodeID).print_puzzle();
-        }
+        return path;
     }
 
 }
